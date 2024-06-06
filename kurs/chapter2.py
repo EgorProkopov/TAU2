@@ -69,8 +69,11 @@ if __name__ == "__main__":
     if print_taks_2:
         print("W_uy:")
         print(tf_to_symbolic_fraction(get_Wuy(A, B, C)[0][0][0], get_Wuy(A, B, C)[1][0][0]))
+        print(tf_to_symbolic_fraction(get_Wuy(A, B, C)[0][1][0], get_Wuy(A, B, C)[1][1][0]))
         print("W_fy:")
         print(tf_to_symbolic_fraction(get_Wfy(A, D, C)[0][0][0], get_Wfy(A, D, C)[1][0][0]))
+        print(tf_to_symbolic_fraction(get_Wfy(A, D, C)[0][1][0], get_Wfy(A, D, C)[1][1][0]))
+
 
     if print_taks_3:
         pass
