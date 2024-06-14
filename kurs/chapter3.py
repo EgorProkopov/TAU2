@@ -253,10 +253,78 @@ def task4(A, B, C, D):
         )
         print("\n-------------------------------------------------")
 
+
 # ------------------------------------------
 # task 5
+def updfcn_modal_full(t, x, u, params):
+    system_params = get_system_params()
+
+    m = system_params["m"]
+    M = system_params["M"]
+    l = system_params["l"]
+    g = system_params["g"]
+
+    L = params.get('L', np.zeros((1, 4)))
+    K = params.get('K', np.zeros((1, 4)))
+    C = params.get('C', np.zeros((1, 4)))
+
+    u[0] = (K @ x[4:]).reshape(-1)[0]
+
+    dxh = np.array([
+        x[4 + 1],
+        1 / (M + m * np.sin(x[4 + 2]) ** 2) * (
+                    -m * l * np.sin(x[4 + 2]) * x[4 + 3] ** 2 + m * g * np.cos(x[4 + 2]) * np.sin(x[4 + 2]) + u[0] + u[
+                1] * np.cos(x[4 + 2]) / l),
+        x[4 + 3],
+        1 / (M + m * np.sin(x[4 + 2]) ** 2) * (
+                    -m * np.cos(x[4 + 2]) * np.sin(x[4 + 2]) * x[4 + 3] ** 2 + (M + m) * g * np.sin(x[4 + 2]) / l + (
+                        M + m) * g * u[1] / (m * l ** 2) + u[0] * np.cos(x[4 + 2]) / l)
+    ]) + L @ (C @ x[4:] - C @ x[:4])
+
+    dx = np.array([
+        x[1],
+        1 / (M + m * np.sin(x[2]) ** 2) * (
+                    -m * l * np.sin(x[2]) * x[3] ** 2 + m * g * np.cos(x[2]) * np.sin(x[2]) + u[0] + u[1] * np.cos(
+                x[2]) / l),
+        x[3],
+        1 / (M + m * np.sin(x[2]) ** 2) * (
+                    -m * np.cos(x[2]) * np.sin(x[2]) * x[3] ** 2 + (M + m) * g * np.sin(x[2]) / l + (M + m) * g * u[
+                1] / (m * l ** 2) + u[0] * np.cos(x[2]) / l)
+    ])
+
+    return np.hstack((dx, dxh))
+
+
 def task5(A, B, C, D):
-    pass
+    y = np.ones((A.shape[0], C.shape[0]))
+    gamma = set_gamma([-1.0, -2.0, -3.0, -4.0])
+    l, new_spec = get_l_modal(A, C, gamma, y)
+    k, new_spec = get_k_modal(A, B, gamma, set_y(A, B))
+
+    time = set_time(5)
+    x0 = np.array([0.0, 0.0, 1.0, 0.0])
+
+    ss_nonlin_observer = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
+    ss_nonlin_observer.set_inputs(2)
+    ss_nonlin_out = control.NonlinearIOSystem(updfcn_modal_full, params={"K": k, "L": l, 'C': C})
+    ss_nonlin_out.set_inputs(2)
+
+    response_nonlin_observer = control.input_output_response(ss_nonlin_observer, T=time, X0=x0, U=np.zeros((2, len(time))))
+    response_nonlin_out = control.input_output_response(ss_nonlin_out, T=time, X0=np.hstack((x0, x0 + 0.1)), U=C @ response_nonlin_observer.states)
+
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+
+    for i in range(4):
+        ax[i].set_title(f"$x_{i + 1}$")
+        ax[i].plot(time, response_nonlin_out.states[i], label='out', linewidth=8)
+        ax[i].plot(time, response_nonlin_observer.states[i], '--', label='observer', linewidth=8)
+
+        ax[i].set_xlabel('t')
+        ax[i].grid()
+        ax[i].legend(fontsize=12)
+
+        plt.savefig(f'chapter3_reports/task5/task1_{"_".join([str(x) for x in x0])}.jpg')
 
 
 if __name__ == "__main__":
