@@ -84,12 +84,14 @@ def task2(A, B, C, D):
 # Task3
 def draw_linear_response(ss, x0, time):
     response = control.initial_response(ss, T=time, X0=x0)
-    fig, ax = plt.subplots(4, figsize=(16, 32))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
     for i in range(4):
         ax[i].set_title(f"$x_{i+1}$")
-        ax[i].plot(time, response.states[i])
+        ax[i].plot(time, response.states[i], linewidth=8, label="linear")
         ax[i].set_xlabel('t')
         ax[i].grid()
+        ax[i].legend()
 
     plt.savefig(f"chapter2_reports/task3_{"_".join([str(x) for x in x0])}.png")
 
@@ -130,13 +132,15 @@ def updfcn(t, x, u, params):
 
 def draw_and_compare_nonlinear_response(ss_lin, ss_nonlin, x0, time):
     resp = control.initial_response(ss_lin, T=time, X0=x0)
-    fig, ax = plt.subplots(4, figsize=(16, 32))
+    resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
-    resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
-        ax[i].plot(time, resp.states[i], label='lin')
-        ax[i].plot(time, resp_non_lin.states[i], label='nonlin')
+        ax[i].plot(time, resp.states[i], label='linear', linewidth=8)
+        ax[i].plot(time, resp_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
         ax[i].set_xlabel('t')
         ax[i].grid()
