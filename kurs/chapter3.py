@@ -238,7 +238,8 @@ def task4(A, B, C, D):
         l, new_spec = get_l_modal(A, C, gamma, y)
         print(f"new spec:\n {new_spec}")
         x0 = np.array([0.0, 0.0, 1.0, 0.0])
-        ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"L": l, 'C': C})
+        k = get_k_modal(A, B, gamma, set_y(A, B))
+        ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
         ss_nonlin.set_inputs(2)
 
         ss_nonlin_observer = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
