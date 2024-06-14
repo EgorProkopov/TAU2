@@ -318,7 +318,6 @@ def task5(A, B, C, D):
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, response_nonlin_out.states[i], label='out', linewidth=8)
-        ax[i].plot(time, response_nonlin_observer.states[i], '--', label='observer', linewidth=8)
 
         ax[i].set_xlabel('t')
         ax[i].grid()
@@ -338,7 +337,7 @@ if __name__ == "__main__":
     print_taks_1 = False
     print_taks_2 = False
     print_taks_3 = False
-    print_taks_4 = True
+    print_taks_4 = False
     print_taks_5 = True
 
     if print_taks_1:
