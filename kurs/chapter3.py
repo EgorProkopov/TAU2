@@ -216,8 +216,38 @@ def task3(A, B, C, D):
 # ------------------------------------------
 # task 4
 def task4(A, B, C, D):
-    pass
+    time = set_time(5)
+    specs = [
+        [-1.0, -2.0, -3.0, -4.0],
+        [-0.1, -0.2, -0.3, -0.4]
+    ]
+    gammas = [
+        set_gamma(specs[0]),
+        set_gamma(specs[1]),
+        np.array([
+            [-1, -1, 0, 0],
+            [1, -1, 0, 0],
+            [0, 0, -2, -2],
+            [0, 0, 2, -2]
+        ])
+    ]
 
+    y = np.ones((A.shape[0], C.shape[0]))
+
+    for gamma in gammas:
+        l, new_spec = get_l_modal(A, C, gamma, y)
+        print(f"new spec:\n {new_spec}")
+        x0 = np.array([0.0, 0.0, 1.0, 0.0])
+        ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"L": l, 'C': C})
+        ss_nonlin.set_inputs(2)
+
+        ss_nonlin_observer = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
+        ss_nonlin_observer.set_inputs(2)
+
+        print(*x0)
+        print("\n")
+        draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time)
+        print("\n-------------------------------------------------")
 
 # ------------------------------------------
 # task 5
