@@ -131,10 +131,85 @@ def task2(A, B, C, D):
             f'max u:\n {round(np.abs(k @ response_nonlin.states).max(), 1)}')
         print("\n")
 
+
 # ------------------------------------------
 # task 3
+def get_l_modal(A, C, gamma, y):
+    q = cvxpy.Variable(A.shape)
+    objective = cvxpy.Minimize(cvxpy.sum_squares(gamma @ q - q @ A - y @ C))
+    problem = cvxpy.Problem(objective)
+    err = problem.solve()
+    l = np.linalg.pinv(q.value) @ y
+    new_spec = np.linalg.eigvals(A + l @ C)
+    return l, new_spec
+
+
+def updfcn_modal_observer(t, x, u, params):
+    system_params = get_system_params()
+
+    m = system_params["m"]
+    M = system_params["M"]
+    l = system_params["l"]
+    g = system_params["g"]
+
+    L = params.get('L', np.zeros((1, 4)))
+    C = params.get('C', np.zeros((1, 4)))
+
+    return np.array(
+    [
+        x[1],
+        1 / (M + m*np.sin(x[2])**2) * (-m*l*np.sin(x[2])*x[3]**2 + m*g*np.cos(x[2])*np.sin(x[2]) + u[0] + u[1]*np.cos(x[2])/l),
+        x[3],
+        1 / (M + m*np.sin(x[2])**2) * (-m*np.cos(x[2])*np.sin(x[2])*x[3]**2 + (M+m)*g*np.sin(x[2])/l + (M+m)*g*u[1]/(m*l**2) + u[0]*np.cos(x[2])/l)
+    ]) + L @ (C@x - u)
+
+
+def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time):
+    response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    response_nonlin_observer = control.input_output_response(ss_nonlin_observer, T=time, X0=x0, U=np.zeros((2, len(time))))
+    error = response_nonlin_observer.states - response_nonlin.states
+
+    fig, ax = plt.subplots(4,  figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+
+    for i in range(4):
+        ax[i].set_title(f"$x_{i + 1}$")
+        ax[i].plot(time, response_nonlin.states[i], label='nonlinear', linewidth=8)
+        ax[i].plot(time, response_nonlin_observer.states[i], '--', label='observer', linewidth=8)
+        ax[i].plot(time, error.states[i], color='r', label='error', linewidth=8)
+
+        ax[i].set_xlabel('t')
+        ax[i].grid()
+        ax[i].legend(fontsize=12)
+
+        plt.savefig(f'chapter3_reports/task3/task1_{"_".join([str(x) for x in x0])}.jpg')
+
+
 def task3(A, B, C, D):
-    pass
+    time = set_time(5)
+
+    gamma = set_gamma([-1.0, -2.0, -3.0, -4.0])
+    y = np.ones((A.shape[0], C.shape[0]))
+    l, new_spec = get_l_modal(A, C, gamma, y)
+
+    ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": np.array([1, 1, 1, 1])})
+    ss_nonlin.set_inputs(2)
+
+    ss_nonlin_observer = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
+    ss_nonlin_observer.set_inputs(2)
+
+    x0_list = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+    ]
+
+    for x0 in x0_list:
+        print(*x0)
+        print("\n")
+        draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time)
+        print("\n-------------------------------------------------")
 
 
 # ------------------------------------------
@@ -158,7 +233,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = False
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = True
     print_taks_4 = True
     print_taks_5 = True
