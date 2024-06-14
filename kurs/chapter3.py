@@ -164,7 +164,7 @@ def updfcn_modal_observer(t, x, u, params):
     ]) + L @ (C@x - u)
 
 
-def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time):
+def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time, save_path=r"chapter3_reports/task3"):
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
     response_nonlin_observer = control.input_output_response(ss_nonlin_observer, T=time, X0=x0, U=np.zeros((2, len(time))))
     error = response_nonlin_observer.states - response_nonlin.states
@@ -182,7 +182,7 @@ def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0
         ax[i].grid()
         ax[i].legend(fontsize=12)
 
-        plt.savefig(f'chapter3_reports/task3/task1_{"_".join([str(x) for x in x0])}.jpg')
+        plt.savefig(f'{save_path}/task1_{"_".join([str(x) for x in x0])}.jpg')
 
 
 def task3(A, B, C, D):
@@ -234,7 +234,7 @@ def task4(A, B, C, D):
 
     y = np.ones((A.shape[0], C.shape[0]))
 
-    for gamma in gammas:
+    for i, gamma in enumerate(gammas):
         l, new_spec = get_l_modal(A, C, gamma, y)
         print(f"new spec:\n {new_spec}")
         x0 = np.array([0.0, 0.0, 1.0, 0.0])
@@ -246,7 +246,10 @@ def task4(A, B, C, D):
 
         print(*x0)
         print("\n")
-        draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0, time)
+        draw_and_nonlinear_response_modal_observer(
+            ss_nonlin, ss_nonlin_observer, x0, time,
+            save_path=f"chapter3_reports/task4/{i+1}"
+        )
         print("\n-------------------------------------------------")
 
 # ------------------------------------------
@@ -265,7 +268,7 @@ if __name__ == "__main__":
 
     print_taks_1 = False
     print_taks_2 = False
-    print_taks_3 = True
+    print_taks_3 = False
     print_taks_4 = True
     print_taks_5 = True
 
