@@ -61,13 +61,13 @@ def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=8)
-        ax[i].plot(time, resp_nonlin.states[i], '---', label='nonlinear', linewidth=8)
+        ax[i].plot(time, resp_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
         ax[i].set_xlabel('t')
         ax[i].grid()
         ax[i].legend(fontsize=12)
 
-        plt.savefig(f'chapter3_reports/task3_1_{"_".join([str(x) for x in x0])}.jpg')
+        plt.savefig(f'chapter3_reports/task1/task1_{"_".join([str(x) for x in x0])}.jpg')
 
 
 def task1(A, B, C, D):
@@ -92,7 +92,7 @@ def task1(A, B, C, D):
     for x0 in x0_list:
         print(*x0)
         print("\n")
-        draw_and_compare_nonlinear_response(ss_mod, ss_nonlin, x0, time)
+        draw_and_compare_nonlinear_response_modal(ss_mod, ss_nonlin, x0, time)
         print("\n-------------------------------------------------")
 
 # ------------------------------------------
