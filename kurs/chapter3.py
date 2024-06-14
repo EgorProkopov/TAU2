@@ -119,8 +119,9 @@ def task2(A, B, C, D):
     y = set_y(A, B)
 
     for gamma in gammas:
-        k = get_k_modal(A, B, gamma, y)
-        x0 = [0, 0, 1, 0]
+        k, new_spec = get_k_modal(A, B, gamma, y)
+        print(f"new spec:\n {new_spec}")
+        x0 = np.array([0.0, 0.0, 1.0, 0.0])
         ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
         ss_nonlin.set_inputs(2)
         response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
@@ -156,7 +157,7 @@ if __name__ == "__main__":
     C = get_C()
     D = get_D()
 
-    print_taks_1 = True
+    print_taks_1 = False
     print_taks_2 = True
     print_taks_3 = True
     print_taks_4 = True
