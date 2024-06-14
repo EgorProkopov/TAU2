@@ -53,7 +53,7 @@ def updfcn_modal(t, x, u, params):
 
 def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
     resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
-    resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4,  figsize=(16, 24))
     fig.suptitle(f"$x_0$: {x0}", fontsize=18)
@@ -61,7 +61,7 @@ def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=8)
-        ax[i].plot(time, resp_nonlin.states[i], '--', label='nonlinear', linewidth=8)
+        ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
         ax[i].set_xlabel('t')
         ax[i].grid()
@@ -76,6 +76,7 @@ def task1(A, B, C, D):
     gamma = set_gamma([-1.0, -2.0, -3.0, -4.0])
     y = set_y(A, B)
     k, new_spec = get_k_modal(A, B, gamma, y)
+    print(f"spec(A + BK): {new_spec}")
 
     ss_mod = control.ss(A + B @ k, np.zeros_like(A), np.zeros_like(A), np.zeros_like(A))
 
@@ -95,11 +96,39 @@ def task1(A, B, C, D):
         draw_and_compare_nonlinear_response_modal(ss_mod, ss_nonlin, x0, time)
         print("\n-------------------------------------------------")
 
+
 # ------------------------------------------
 # task 2
 def task2(A, B, C, D):
-    pass
+    time = set_time(5)
+    specs = [
+        [-1.0, -2.0, -3.0, -4.0],
+        [-0.1, -0.2, -0.3, -0.4]
+    ]
+    gammas = [
+        set_gamma(specs[0]),
+        set_gamma(specs[1]),
+        np.array([
+            [-1, -1, 0, 0],
+            [1, -1, 0, 0],
+            [0, 0, -4, -4],
+            [0, 0, 4, -4]
+        ])
+    ]
 
+    y = set_y(A, B)
+
+    for gamma in gammas:
+        k = get_k_modal(A, B, gamma, y)
+        x0 = [0, 0, 1, 0]
+        ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
+        ss_nonlin.set_inputs(2)
+        response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+        print(f'gamma:\n {np.linalg.eigvals(gamma)} \n\n'
+            f'max a:\n {round(np.abs(response_nonlin.states[0]).max(), 1)}\n'
+            f'max phi:\n {round(np.abs(response_nonlin.states[3]).max(), 1)}\n'
+            f'max u:\n {round(np.abs(k @ response_nonlin.states).max(), 1)}')
+        print("\n")
 
 # ------------------------------------------
 # task 3
