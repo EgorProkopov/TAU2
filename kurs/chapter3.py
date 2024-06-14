@@ -192,7 +192,8 @@ def task3(A, B, C, D):
     y = np.ones((A.shape[0], C.shape[0]))
     l, new_spec = get_l_modal(A, C, gamma, y)
 
-    ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": np.array([1, 1, 1, 1])})
+    k = get_k_modal(A, B, gamma, set_y(A, B))
+    ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
     ss_nonlin.set_inputs(2)
 
     ss_nonlin_observer = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
