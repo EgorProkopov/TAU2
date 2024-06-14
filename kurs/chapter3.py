@@ -176,7 +176,7 @@ def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0
         ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, response_nonlin.states[i], label='nonlinear', linewidth=8)
         ax[i].plot(time, response_nonlin_observer.states[i], '--', label='observer', linewidth=8)
-        ax[i].plot(time, error.states[i], color='r', label='error', linewidth=8)
+        ax[i].plot(time, error[i], color='r', label='error', linewidth=8)
 
         ax[i].set_xlabel('t')
         ax[i].grid()
@@ -192,7 +192,7 @@ def task3(A, B, C, D):
     y = np.ones((A.shape[0], C.shape[0]))
     l, new_spec = get_l_modal(A, C, gamma, y)
 
-    k = get_k_modal(A, B, gamma, set_y(A, B))
+    k, new_spec = get_k_modal(A, B, gamma, set_y(A, B))
     ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
     ss_nonlin.set_inputs(2)
 
