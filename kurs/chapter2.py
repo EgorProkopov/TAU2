@@ -91,7 +91,7 @@ def draw_linear_response(ss, x0, time):
         ax[i].plot(time, response.states[i], linewidth=8, label="linear")
         ax[i].set_xlabel('t')
         ax[i].grid()
-        ax[i].legend()
+        ax[i].legend(fontsize=12)
 
     plt.savefig(f"chapter2_reports/task3_{"_".join([str(x) for x in x0])}.png")
 
@@ -144,7 +144,7 @@ def draw_and_compare_nonlinear_response(ss_lin, ss_nonlin, x0, time):
 
         ax[i].set_xlabel('t')
         ax[i].grid()
-        ax[i].legend()
+        ax[i].legend(fontsize=12)
 
     plt.savefig(f"chapter2_reports/task4_{"_".join([str(x) for x in x0])}.png")
 
