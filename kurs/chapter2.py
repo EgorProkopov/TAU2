@@ -91,6 +91,8 @@ def draw_linear_response(ss, x0, time):
         ax[i].set_xlabel('t')
         ax[i].grid()
 
+    plt.savefig(f"chapter2_reports/task3_{"_".join([str(x) for x in x0])}.png")
+
 
 def task3(A, B, C, D):
     ss_u = control.ss(A, B, C, np.zeros((2, 1)))
@@ -139,6 +141,8 @@ def draw_and_compare_nonlinear_response(ss_lin, ss_nonlin, x0, time):
         ax[i].set_xlabel('t')
         ax[i].grid()
         ax[i].legend()
+
+    plt.savefig(f"chapter2_reports/task4_{"_".join([str(x) for x in x0])}.png")
 
 
 def task4(A, B, C, D):
