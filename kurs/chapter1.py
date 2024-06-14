@@ -1,6 +1,16 @@
 import numpy as np
 
 
+def get_system_params():
+    params = {
+        "m": 1,
+        "M": 10,
+        "l": 1,
+        "g": 9.8
+    }
+    return params
+
+
 def get_A(m=1, M=10, l=1, g=9.8):
     A = np.array([
         [0, 1, 0, 0],

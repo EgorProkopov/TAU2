@@ -1,4 +1,5 @@
 import sympy
+import numpy as np
 
 
 def tf_to_symbolic_fraction(num, den):
@@ -19,3 +20,7 @@ def tf_to_symbolic_fraction(num, den):
         sym_den += round(den[i], 2) * (x ** (length_den - counter))
         counter += 1
     return sym_num / sym_den
+
+
+def set_time(end_t=10, dt=0.001, start_t=0):
+    return np.linspace(start_t, end_t, int(end_t / dt))
