@@ -84,17 +84,17 @@ def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
     resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
-    fig, ax = plt.subplots(4, figsize=(12, 18))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=12)
 
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
-        ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=8)
-        ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
+        ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=6)
+        ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=6)
 
-        ax[i].set_xlabel('t')
+        # ax[i].set_xlabel('t')
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=8)
 
         plt.savefig(f'chapter4_reports/task1/task1_{"_".join([str(x) for x in x0])}.jpg')
 
