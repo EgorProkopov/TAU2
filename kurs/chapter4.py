@@ -84,7 +84,7 @@ def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
     resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
-    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig, ax = plt.subplots(4, figsize=(12, 18))
     fig.suptitle(f"$x_0$: {x0}", fontsize=18)
 
     for i in range(4):
@@ -102,8 +102,26 @@ def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
 def task1(A, B, C, D):
     alpha = 1
     k, new_spec = get_k_lmi(A, B, alpha)
-    print(k)
-    print(f"new_spec:\n {new_spec}")
+
+    x0_list = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+    ]
+    time = set_time(5)
+
+    ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
+    ss_nonlin.set_inputs(2)
+
+    ss_lin = control.ss(A + B @ k, np.zeros_like(A), np.zeros_like(A), np.zeros_like(A))
+
+    for x0 in x0_list:
+        print(*x0)
+        print("\n")
+        draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time)
+        print("\n-------------------------------------------------")
+
 
 
 # ------------------------------------------
