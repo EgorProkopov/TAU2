@@ -13,8 +13,97 @@ from kurs.utils import *
 
 
 # task 1
+
+def get_k_lmi(A, B, alpha):
+    P = cvxpy.Variable(A.shape, PSD=True)
+    Y = cvxpy.Variable((B.shape[1], B.shape[0]))
+    prob = cvxpy.Problem(cvxpy.Maximize(0), [P >> np.eye(4), P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0])
+    prob.solve()
+    k = Y.value @ np.linalg.inv(P.value)
+    new_spec = np.linalg.eigvals(A + B @ k)
+    return k, new_spec
+
+
+def get_k_lmi_mu(A, B, alpha, x0, mu=None):
+    P = cvxpy.Variable(A.shape,PSD=True)
+    Y = cvxpy.Variable((B.shape[1], B.shape[0]))
+
+    if mu is None:
+        mu_ = cvxpy.Variable((1, 1))
+    else:
+        mu_ = mu
+    sub1 = cvxpy.bmat([
+        [P, x0],
+        [x0.T, [[1]]]
+    ])
+
+    if mu is None:
+        sub2 = cvxpy.bmat([
+            [P, Y.T],
+            [Y, mu_]
+        ])
+    else:
+        sub2 = cvxpy.bmat([
+            [P, Y.T],
+            [Y, [[mu_ * mu_]]]
+        ])
+
+    prob = cvxpy.Problem(cvxpy.Maximize(0) if mu is not None else cvxpy.Minimize(mu_),
+                         [P >> np.eye(4),
+                          P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0,
+                          sub1 >> 0, sub2 >> 0])
+    res = prob.solve(solver="CLARABEL")
+
+    k = Y.value @ np.linalg.inv(P.value)
+
+    return k, np.sqrt(res)
+
+
+def updfcn_lmi(t, x, u, params):
+    system_params = get_system_params()
+
+    m = system_params["m"]
+    M = system_params["M"]
+    l = system_params["l"]
+    g = system_params["g"]
+
+    k = params.get('K', np.zeros((1, 4)))
+
+    u[0] = (k @ x).reshape(-1)[0]
+
+    return np.array(
+    [
+        x[1],
+        1 / (M + m*np.sin(x[2])**2) * (-m*l*np.sin(x[2])*x[3]**2 + m*g*np.cos(x[2])*np.sin(x[2]) + u[0] + u[1]*np.cos(x[2])/l),
+        x[3],
+        1 / (M + m*np.sin(x[2])**2) * (-m*np.cos(x[2])*np.sin(x[2])*x[3]**2 + (M+m)*g*np.sin(x[2])/l + (M+m)*g*u[1]/(m*l**2) + u[0]*np.cos(x[2])/l)
+    ])
+
+
+def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
+    resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
+    response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+
+    for i in range(4):
+        ax[i].set_title(f"$x_{i + 1}$")
+        ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=8)
+        ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
+
+        ax[i].set_xlabel('t')
+        ax[i].grid()
+        ax[i].legend(fontsize=12)
+
+        plt.savefig(f'chapter4_reports/task1/task1_{"_".join([str(x) for x in x0])}.jpg')
+
+
 def task1(A, B, C, D):
-    pass
+    alpha = 1
+    k, new_spec = get_k_lmi(A, B, alpha)
+    print(k)
+    print(f"new_spec:\n {new_spec}")
 
 
 # ------------------------------------------
