@@ -224,21 +224,21 @@ def get_l_lmi(a, c, alpha):
     new_spec = np.linalg.eigvals(a + l @ c)
     return l, new_spec
 
-def draw_nonlinear_lmi_observer(ss_nonlin, x0, time):
+
+def draw_nonlinear_lmi_observer(ss_nonlin, x0s, time):
     save_path = r"chapter4_reports/task4"
-    x0 = np.array(x0)
-    resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
-    resp_non_lin_obs = control.input_output_response(ss_nonlin, T=time, X0=x0 + 0.1, U=C @ resp_non_lin.states)
-    err = abs(resp_non_lin_obs.states - resp_non_lin.states)
     fig, ax = plt.subplots(4, figsize=(8, 12))
-    fig.suptitle(f"$\\alpha={x0}$")
-    for i in range(4):
-        ax[i].plot(time, err[i], label=f'$e_{i}$')
-        ax[i].xlabel('t')
-        ax[i].grid()
-        ax[i].legend()
-        ax[i].title(f'$y(0) = {x0}T$')
-        ax[i].savefig(f'{save_path}/task4_4_{x0}.png')
+    for x0 in x0s:
+        x0 = np.array(x0)
+        resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+        resp_non_lin_obs = control.input_output_response(ss_nonlin, T=time, X0=x0 + 0.1, U=C @ resp_non_lin.states)
+        err = abs(resp_non_lin_obs.states - resp_non_lin.states)
+        for i in range(4):
+            ax[i].plot(time, err[i], label=f'{x0}')
+            ax[i].set_xlabel('t')
+            ax[i].grid()
+            ax[i].legend()
+    plt.savefig(f'{save_path}/task4_4.png')
 
 
 def task4(A, B, C, D):
@@ -262,8 +262,7 @@ def task4(A, B, C, D):
         [0.0, 0.0, 0.0, 1.0]
     ]
 
-    for x0 in x0s:
-        draw_nonlinear_lmi_observer(ss_nonlin, x0, time)
+    draw_nonlinear_lmi_observer(ss_nonlin, x0s, time)
 # ------------------------------------------
 # task 5
 def task5(A, B, C, D):
