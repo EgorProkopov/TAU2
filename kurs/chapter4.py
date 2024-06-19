@@ -143,14 +143,13 @@ def draw_compare_nonlinear_alphas(A, B, x0, time, alphas):
             ax[i].legend()
 
         print(
-            f'${alpha}$ & {round(np.abs(resp_nonlin.states[0]).max(), 2)} & {round(np.abs(resp_nonlin.states[2]).max(), 2)} & {round(np.abs(k @ resp_nonlin.states).max(), 1)} \\\\')
+            f'alpha: ${alpha}$  max x: {round(np.abs(resp_nonlin.states[0]).max(), 2)} max phi:  {round(np.abs(resp_nonlin.states[2]).max(), 2)}  max u: {round(np.abs(k @ resp_nonlin.states).max(), 1)} \\\\')
     plt.savefig(f'{save_path}/task4_2_{"_".join([str(x) for x in x0])}.png')
     plt.close()
 
     plt.title(f"$u(t)$, $x_0=${x0}")
-    plt.plot(time, us[0], label=f"$\\alpha={alphas[0]}$")
-    plt.plot(time, us[1], label=f"$\\alpha={alphas[1]}$")
-    # plt.plot(time, us[2], label=f"$\\alpha={alphas[2]}$")
+    for i in range(len(alphas)):
+        plt.plot(time, us[i], label=f"$\\alpha={alphas[i]}$")
     plt.legend()
     plt.savefig(f'{save_path}/task4_2_u_{"_".join([str(x) for x in x0])}.png')
 
