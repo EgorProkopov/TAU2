@@ -203,8 +203,8 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
 def task3(A, B, C, D):
     x0 = np.array([1.0, 0.0, 0.0, 0.0])
-    time = set_time(5)
-    alphas = [0.0, 0.5, 1.0]
+    time = set_time(30)
+    alphas = [0.1, 0.5, 1.0]
 
     for alpha in alphas:
         draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time)
