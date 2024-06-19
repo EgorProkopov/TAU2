@@ -125,8 +125,43 @@ def task1(A, B, C, D):
 
 # ------------------------------------------
 # task 2
+def draw_compare_nonlinear_alphas(x0, time, alphas):
+    save_path = r"chapter4_reports/task2"
+    fig, ax = plt.subplots(4, figsize=(8, 12))
+    us = []
+    for alpha in alphas:
+        K, new_spec = get_k_lmi(A, B, alpha)
+        ss_nonlin= control.NonlinearIOSystem(updfcn_lmi, params={"K": K})
+        ss_nonlin.set_inputs(2)
+        resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+        us.append((K @ resp_nonlin.states).reshape(-1))
+        for i in range(4):
+            ax[i].set_title(f"$x_{i + 1}$")
+            ax[i].plot(time, resp_nonlin.states[i], label=f"$\\alpha={alpha}$")
+            ax[i].set_xlabel('t')
+            ax[i].grid(True)
+            ax[i].legend()
+
+        print(
+            f'${alpha}$ & {round(np.abs(resp_nonlin.states[0]).max(), 2)} & {round(np.abs(resp_nonlin.states[2]).max(), 2)} & {round(np.abs(K @ resp_nonlin.states).max(), 1)} \\\\')
+    plt.savefig(f'{save_path}/task4_2_{"_".join([str(x) for x in x0])}.png')
+    plt.close()
+
+    plt.title(f"$u(t)$, $x_0=${x0}")
+    plt.plot(time, us[0], label=f"$\\alpha={alphas[0]}$")
+    plt.plot(time, us[1], label=f"$\\alpha={alphas[1]}$")
+    plt.plot(time, us[2], label=f"$\\alpha={alphas[2]}$")
+    plt.legend()
+    plt.savefig(f'{save_path}/task4_2_u_{"_".join([str(x) for x in x0])}.png')
+
+    plt.close()
+
+
 def task2(A, B, C, D):
-    pass
+    x0 = [0, 0, 0.1, 0]
+    time = set_time(5)
+    alphas = [0.0001, 0.1, 1.0, 10.0]
+    draw_compare_nonlinear_alphas(x0, time, alphas=alphas)
 
 
 # ------------------------------------------
