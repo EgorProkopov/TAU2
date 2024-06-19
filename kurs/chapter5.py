@@ -72,7 +72,7 @@ def task1(A, B, C, D):
 # task 2
 def task2(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(10)
+    time = set_time(30)
     qs = [10.0, 1.0, 10.0, 1.0]
     rs = [1.0, 10.0, 0.1, 10.0]
 
