@@ -172,7 +172,7 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
     print(f'K = {k}')
-    print(f'spec(A + B K) = {np.linalg.eigvals(A + B @ k)}')
+    print(f'spec(A + BK) = {np.linalg.eigvals(A + B @ k)}')
     ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
     ss_nonlin.set_inputs(2)
 
@@ -202,9 +202,9 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
 
 def task3(A, B, C, D):
-    x0 = np.array([1.0, 0, 0.0, 0.0])
+    x0 = np.array([1.0, 0.0, 0.0, 0.0])
     time = set_time(5)
-    alphas = [0.01, 0.1, 1.0]
+    alphas = [0.0, 0.5, 1.0]
 
     for alpha in alphas:
         draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time)
