@@ -249,7 +249,7 @@ def task4(A, B, C, D):
     new_B = np.block([[np.diag([1] * 4), np.zeros((4, 2))], [np.diag([1] * 4), l]])
 
     ss_lin = control.ss(new_A, new_B, 0 * new_A, 0 * new_B)
-    response = control.forced_response(ss_lin, T=time, U=u.T, X0=np.array([1, 2, 3, 4, 4, 4, 4, 4]))
+    response = control.forced_response(ss_lin, T=time, U=u.T, X0=np.array([1.0, 0, 0.0, 0.0, 1.1, 0.1, 0.1, 0.1]))
 
     fig, axs = plt.subplots(4, figsize=(8, 12))
     fig.suptitle("x")
@@ -275,6 +275,49 @@ def task4(A, B, C, D):
 
 # ------------------------------------------
 # task 5
+def updfcn_lqg(t, x, u, params):
+    system_params = get_system_params()
+
+    m = system_params["m"]
+    M = system_params["M"]
+    l = system_params["l"]
+    g = system_params["g"]
+
+    L = params.get('L', np.zeros((1, 4)))
+    K = params.get('K', np.zeros((1, 4)))
+    C = params.get('C', np.zeros((1, 4)))
+    D = params.get('D', np.zeros((1, 4)))
+    std_f = params.get('std_f', 1)
+    noise = np.random.normal(0, std_f, (1, 1))
+    f = (D @ noise).reshape(-1)
+
+    u[0] = (K @ x[4:]).reshape(-1)[0]
+
+    dxh = np.array([
+        x[4 + 1],
+        1 / (M + m * np.sin(x[4 + 2]) ** 2) * (
+                    -m * l * np.sin(x[4 + 2]) * x[4 + 3] ** 2 + m * g * np.cos(x[4 + 2]) * np.sin(x[4 + 2]) + u[0] + u[
+                1] * np.cos(x[4 + 2]) / l),
+        x[4 + 3],
+        1 / (M + m * np.sin(x[4 + 2]) ** 2) * (
+                    -m * np.cos(x[4 + 2]) * np.sin(x[4 + 2]) * x[4 + 3] ** 2 + (M + m) * g * np.sin(x[4 + 2]) / l + (
+                        M + m) * g * u[1] / (m * l ** 2) + u[0] * np.cos(x[4 + 2]) / l)
+    ]) + L @ (C @ x[4:] - C @ x[:4])
+
+    dx = np.array([
+        x[1],
+        1 / (M + m * np.sin(x[2]) ** 2) * (
+                    -m * l * np.sin(x[2]) * x[3] ** 2 + m * g * np.cos(x[2]) * np.sin(x[2]) + u[0] + u[1] * np.cos(
+                x[2]) / l),
+        x[3],
+        1 / (M + m * np.sin(x[2]) ** 2) * (
+                    -m * np.cos(x[2]) * np.sin(x[2]) * x[3] ** 2 + (M + m) * g * np.sin(x[2]) / l + (M + m) * g * u[
+                1] / (m * l ** 2) + u[0] * np.cos(x[2]) / l)
+    ]) + f
+
+    return np.hstack((dx, dxh))
+
+
 def task5(A, B, C, D):
     pass
 
@@ -291,7 +334,7 @@ if __name__ == "__main__":
     print_taks_2 = False
     print_taks_3 = False
     print_taks_4 = True
-    print_taks_5 = True
+    print_taks_5 = False
 
     if print_taks_1:
         task1(A, B, C, D)
