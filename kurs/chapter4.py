@@ -195,8 +195,8 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
     plt.clf()
     plt.title(f"$u(t)$, $\\alpha={alpha}$")
-    plt.plot(time, (k @ resp_nonlin.states).reshape(-1), label="nonlinear")
     plt.plot(time, (k @ resp.states).reshape(-1), label="linear")
+    plt.plot(time, (k @ resp_nonlin.states).reshape(-1), '--', label="nonlinear")
     plt.legend()
     plt.savefig(f'{save_path}/task4_3_u_{alpha}.png')
 
