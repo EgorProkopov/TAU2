@@ -272,7 +272,7 @@ def task5(A, B, C, D):
     l = l.astype(np.float64)
     k, new_spec_k = get_k_lmi(A, B, 3)
 
-    x0 = np.array([0, 0, 0.2, 0])
+    x0 = np.array([1.0, 0.0, 0.0, 0.0])
     time = set_time(10)
 
     ss_non_lin = control.NonlinearIOSystem(updfcn_modal_full, params={"K": k, "L": l, 'C': C})
@@ -282,7 +282,11 @@ def task5(A, B, C, D):
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
     for i in range(4):
-        plt.plot(time, resp_non_lin_by_output.states[i], label=f'$x_{i}$')
+        ax[i].plot(time, resp_non_lin_by_output.states[i], label=f'x0: {x0}')
+        ax[i].set_xlabel('t')
+        ax[i].grid()
+        ax[i].legend()
+
     plt.xlabel('t')
     plt.legend()
     plt.savefig(f'chapter4_reports/task5/task4_5_new.png')
