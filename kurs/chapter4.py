@@ -212,10 +212,58 @@ def task3(A, B, C, D):
 
 # ------------------------------------------
 # task 4
+def get_l_lmi(a, c, alpha):
+    Q = cvxpy.Variable(a.shape, PSD=True)
+    Y = cvxpy.Variable((c.shape[1], c.shape[0]))
+    prob = cvxpy.Problem(
+        cvxpy.Maximize(0),
+        [Q >> np.eye(4), a.T@Q + Q@A + 2*alpha*Q + c.T@Y.T + Y@c << 0]
+    )
+    prob.solve()
+    l = np.linalg.inv(Q.value) @ Y.value
+    new_spec = np.linalg.eigvals(a + l @ c)
+    return l, new_spec
+
+def draw_nonlinear_lmi_observer(ss_nonlin, x0, time):
+    save_path = r"chapter4_reports/task4"
+    x0 = np.array(x0)
+    resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    resp_non_lin_obs = control.input_output_response(ss_nonlin, T=time, X0=x0 + 0.1, U=C @ resp_non_lin.states)
+    err = abs(resp_non_lin_obs.states - resp_non_lin.states)
+    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig.suptitle(f"$\\alpha={x0}$")
+    for i in range(4):
+        ax[i].plot(time, err[i], label=f'$e_{i}$')
+        ax[i].xlabel('t')
+        ax[i].grid()
+        ax[i].legend()
+        ax[i].title(f'$y(0) = {x0}T$')
+        ax[i].savefig(f'{save_path}/task4_4_{x0}.png')
+
+
 def task4(A, B, C, D):
-    pass
+    alpha = 1
+    l, new_spec = get_l_lmi(A, C, alpha)
+    print(f"l:\n {l}")
+    print(f"new_spec: \n{new_spec}")
 
+    k, new_spec = get_k_lmi(A, B, alpha=1)
+    time = set_time(10)
 
+    ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
+    ss_nonlin.set_inputs(2)
+
+    ss_nonlin_obs = control.NonlinearIOSystem(updfcn_modal_observer, params={"L": l, 'C': C})
+    ss_nonlin_obs.set_inputs(2)
+
+    x0s = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+    ]
+
+    for x0 in x0s:
+        draw_nonlinear_lmi_observer(ss_nonlin, x0, time)
 # ------------------------------------------
 # task 5
 def task5(A, B, C, D):
@@ -232,7 +280,7 @@ if __name__ == "__main__":
 
     print_taks_1 = False
     print_taks_2 = False
-    print_taks_3 = True
+    print_taks_3 = False
     print_taks_4 = True
     print_taks_5 = True
 
