@@ -181,16 +181,16 @@ def draw_nonlinear_kalman(C, D, k, l, x0, time, q, r, save_path):
 
     ss_nonlin_lqe = control.NonlinearIOSystem(updfcn_lqe, params={"L": l, "C": C})
     ss_nonlin_lqe.set_inputs(2)
-    resp_nonlin_lqe = control.input_output_response(ss_nonlin_lqe, T=time, X0=x0 + 0.1, U=C @ resp_nonlin_f.states)
-    err = resp_nonlin_lqe.states - resp_nonlin_f.states
+    resp_nonlin_lqe = control.input_output_response(ss_nonlin_lqe, T=time, X0=[1.1, 0.1, 0.1, 0.1], U=C @ resp_nonlin_f.states)
+    err = abs(resp_nonlin_lqe.states - resp_nonlin_f.states)
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
     for i in range(4):
-        ax[i].plot(time, err[i], label=f'$e_{i}$')
+        ax[i].plot(time, err[i], label=f'$e_{i} = |x_i - \\hat x_i|$')
         ax[i].set_xlabel('t')
         ax[i].grid()
         ax[i].legend()
-        ax[i].savefig(f'{save_path}/task_34_{q}_{r}.png')
+    fig.savefig(f'{save_path}/task_34_{q}_{r}.png')
 
 
 def task3(A, B, C, D):
