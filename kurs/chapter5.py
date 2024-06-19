@@ -252,15 +252,26 @@ def task4(A, B, C, D):
     response = control.forced_response(ss_lin, T=time, U=u.T, X0=np.array([1, 2, 3, 4, 4, 4, 4, 4]))
 
     fig, axs = plt.subplots(4, figsize=(8, 12))
+    fig.suptitle("x")
+    fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
+    fig_e.suptitle("err")
     for i, state in enumerate(response.states[:4]):
         axs[i].plot(time, state, label=f'$ x_{i} $')
-        axs[i].plot(time, response.states[4 + i], '--', label=f'$ e_{i} $')
+        axs_e[i].plot(time, response.states[4 + i], label=f'$ e_{i} $')
 
     for i in range(4):
         axs[i].set_xlabel(f"t", fontsize=12)
         axs[i].grid(True)
         axs[i].legend()
-    plt.savefig(f'{save_path}/task5_lqg_lin.jpg')
+
+    for i in range(4):
+        axs_e[i].set_xlabel(f"t", fontsize=12)
+        axs_e[i].grid(True)
+        axs_e[i].legend()
+
+    fig.savefig(f'{save_path}/task5_lqg_lin_x.jpg')
+    fig_e.savefig(f'{save_path}/task5_lqg_lin_err.jpg')
+
 
 # ------------------------------------------
 # task 5
