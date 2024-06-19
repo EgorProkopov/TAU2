@@ -320,7 +320,7 @@ def updfcn_lqg(t, x, u, params):
 
 def task5(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(20)
+    time = set_time(12)
 
     q = [1.0] * 4
     r = [0.1] * 2
@@ -350,17 +350,15 @@ def task5(A, B, C, D):
         U=np.zeros((2, len(time)))
     )
 
-    resp_err = abs(resp_nonlin_LQG.states - resp_nonlin_LQG.states)
-
     fig, axs = plt.subplots(4, figsize=(8, 12))
     fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
 
     for i, state in enumerate(resp_nonlin_LQG.states[:4]):
         axs[i].plot(time, resp_nonlin_LQG.states[i], label=f'$ x_{i} $')
-        axs_e[i].plot(time, resp_err.states[i + 4], label=f'$ e_{i} $')
+        axs_e[i].plot(time, abs(resp_nonlin_LQG.states[i]-resp_nonlin_LQG.states[i + 4]), label=f'$ e_{i} $')
 
     for i in range(4):
-        axs[i].set_xlabel(f"t, [c]", fontsize=12)
+        axs[i].set_xlabel(f"t", fontsize=12)
         axs[i].grid(True)
         axs[i].legend()
 
@@ -384,8 +382,8 @@ if __name__ == "__main__":
     print_taks_1 = False
     print_taks_2 = False
     print_taks_3 = False
-    print_taks_4 = True
-    print_taks_5 = False
+    print_taks_4 = False
+    print_taks_5 = True
 
     if print_taks_1:
         task1(A, B, C, D)
