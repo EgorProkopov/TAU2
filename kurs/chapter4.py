@@ -263,10 +263,29 @@ def task4(A, B, C, D):
     ]
 
     draw_nonlinear_lmi_observer(ss_nonlin, x0s, time)
+
+
 # ------------------------------------------
 # task 5
 def task5(A, B, C, D):
-    pass
+    l, new_spec_l = get_l_lmi(A, C, 0.5)
+    l = l.astype(np.float64)
+    k, new_spec_k = get_k_lmi(A, B, 3)
+
+    x0 = np.array([0, 0, 0.2, 0])
+    time = set_time(10)
+
+    ss_non_lin = control.NonlinearIOSystem(updfcn_modal_full, params={"K": k, "L": l, 'C': C})
+    ss_non_lin.set_inputs(2)
+    resp_non_lin_by_output = control.input_output_response(ss_non_lin, T=time, X0=np.hstack((x0, x0 + 0.1)),
+                                                           U=np.zeros((2, len(time))))
+
+    fig, ax = plt.subplots(4, figsize=(8, 12))
+    for i in range(4):
+        plt.plot(time, resp_non_lin_by_output.states[i], label=f'$x_{i}$')
+    plt.xlabel('t')
+    plt.legend()
+    plt.savefig(f'chapter4_reports/task5/task4_5_new.png')
 
 
 if __name__ == "__main__":
@@ -280,7 +299,7 @@ if __name__ == "__main__":
     print_taks_1 = False
     print_taks_2 = False
     print_taks_3 = False
-    print_taks_4 = True
+    print_taks_4 = False
     print_taks_5 = True
 
     if print_taks_1:
