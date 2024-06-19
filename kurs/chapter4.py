@@ -122,9 +122,9 @@ def draw_compare_nonlinear_alphas(A, B, x0, time, alphas):
 
 
 def task2(A, B, C, D):
-    x0 = [1.0, 0, 0.0, 0]
+    x0 = [1.0, 1.0, 0.0, 0]
     time = set_time(5)
-    alphas = [0.1, 0.5, 1, 2]
+    alphas = [0.01, 0.1, 0.5, 1]
     draw_compare_nonlinear_alphas(A, B, x0, time, alphas=alphas)
 
 
@@ -158,7 +158,7 @@ def get_k_lmi_mu(A, B, alpha, x0, mu=None):
                          [P >> np.eye(4),
                           P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0,
                           sub1 >> 0, sub2 >> 0])
-    res = prob.solve(solver="CLARABEL")
+    res = prob.solve()
 
     k = Y.value @ np.linalg.inv(P.value)
 
@@ -179,12 +179,12 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
     ss_lin = control.ss(A + B @ k, np.zeros_like(A), np.zeros_like(A), np.zeros_like(A))
 
     resp = control.initial_response(ss_lin, T=time, X0=x0)
-    resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
     fig.suptitle(f"$\\alpha={alpha}$")
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
-        ax[i].plot(time, resp_non_lin.states[i], label="nonlinear")
         ax[i].plot(time, resp.states[i], label="linear")
+        ax[i].plot(time, resp_nonlin.states[i], '--', label="nonlinear")
 
         ax[i].set_xlabel('t')
         ax[i].grid(True)
@@ -195,7 +195,7 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
     plt.clf()
     plt.title(f"$u(t)$, $\\alpha={alpha}$")
-    plt.plot(time, (k @ resp_non_lin.states).reshape(-1), label="nonlinear")
+    plt.plot(time, (k @ resp_nonlin.states).reshape(-1), label="nonlinear")
     plt.plot(time, (k @ resp.states).reshape(-1), label="linear")
     plt.legend()
     plt.savefig(f'{save_path}/task4_3_u_{alpha}.png')
@@ -231,7 +231,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = False
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = True
     print_taks_4 = True
     print_taks_5 = True
