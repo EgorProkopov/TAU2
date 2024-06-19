@@ -16,7 +16,7 @@ from kurs.utils import *
 # task 1
 def get_k_lqr(A, B, Q, R):
     k, _, _ = control.lqr(A, B, Q, R)
-    new_spec = np.linalg.eigvals(A + B @ k)
+    new_spec = np.linalg.eigvals(A + B @ (-k))
     return k, new_spec
 
 
@@ -73,7 +73,7 @@ def task1(A, B, C, D):
 def task2(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
     time = set_time(10)
-    qs = [1.0, 1.0, 10.0, 10.0]
+    qs = [10.0, 1.0, 10.0, 1.0]
     rs = [1.0, 10.0, 0.1, 10.0]
 
     for q, r in zip(qs, rs):
@@ -116,8 +116,8 @@ if __name__ == "__main__":
     C = get_C()
     D = get_D()
 
-    print_taks_1 = True
-    print_taks_2 = False
+    print_taks_1 = False
+    print_taks_2 = True
     print_taks_3 = True
     print_taks_4 = True
     print_taks_5 = True
