@@ -215,11 +215,52 @@ def task3(A, B, C, D):
     save_path = r"chapter5_reports/task3"
     draw_nonlinear_kalman(C, D, k, l, x0, time, q_k, r_k, save_path)
 
+
 # ------------------------------------------
 # task 4
 def task4(A, B, C, D):
-    pass
+    x0 = [1.0, 0, 0.0, 0.0]
+    time = set_time(20)
 
+    q = [1.0] * 4
+    r = [0.1] * 2
+
+    l, new_spec = get_kalman(A, C, q, r)
+    print(f"L: \n{l}")
+    print(f"new_spec: \n{new_spec}")
+
+    q_k = 1.0
+    r_k = 1.0
+    Q_k = np.diag(np.ones((A.shape[0]))) * q_k
+    R_k = np.diag(np.ones((B.shape[1]))) * r_k
+
+    k, new_spec_k = get_k_lqr(A, B, Q_k, R_k)
+    k = -k
+
+    print(f"k: \n{k}")
+    print(f"new_spec_k: \n{new_spec_k}")
+
+    save_path = r"chapter5_reports/task4"
+
+    f, xi = np.random.normal(0, q, (len(time), 4)), np.random.normal(0, r, (len(time), 2))
+    u = np.hstack([f, xi])
+
+    new_A = np.block([[A + B @ k, -B @ k], [np.zeros((A.shape[0], k.shape[1] * 2 - C.shape[1])), A + l @ C]])
+    new_B = np.block([[np.diag([1] * 4), np.zeros((4, 2))], [np.diag([1] * 4), l]])
+
+    ss_lin = control.ss(new_A, new_B, 0 * new_A, 0 * new_B)
+    response = control.forced_response(ss_lin, T=time, U=u.T, X0=np.array([1, 2, 3, 4, 4, 4, 4, 4]))
+
+    fig, axs = plt.subplots(4, figsize=(8, 12))
+    for i, state in enumerate(response.states[:4]):
+        axs[i].plot(time, state, label=f'$ x_{i} $')
+        axs[i].plot(time, response.states[4 + i], '--', label=f'$ e_{i} $')
+
+    for i in range(4):
+        axs[i].set_xlabel(f"t", fontsize=12)
+        axs[i].grid(True)
+        axs[i].legend()
+    plt.savefig(f'{save_path}/task5_lqg_lin.jpg')
 
 # ------------------------------------------
 # task 5
@@ -237,7 +278,7 @@ if __name__ == "__main__":
 
     print_taks_1 = False
     print_taks_2 = False
-    print_taks_3 = True
+    print_taks_3 = False
     print_taks_4 = True
     print_taks_5 = True
 
