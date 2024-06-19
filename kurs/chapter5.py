@@ -38,11 +38,11 @@ def draw_nonlinear_lqr(k, x0, time, q, r, save_path):
         ax[i].grid()
 
     fig_u, ax_u = plt.subplots(1, figsize=(8, 12))
-    ax_u[0].plot(time, us, label=f'Q = ${q}I_Q$; R = ${r}I_R$')
-    ax_u[0].legend()
-    ax_u[0].set_xlabel('t')
-    ax_u[0].set_ylabel('$x_i$')
-    ax_u[0].grid()
+    ax_u.plot(time, us, label=f'Q = ${q}I_Q$; R = ${r}I_R$')
+    ax_u.legend()
+    ax_u.set_xlabel('t')
+    ax_u.set_ylabel('$x_i$')
+    ax_u.grid()
 
     fig.savefig(f'{save_path}/task{q}_{r}_states.png')
     fig_u.savefig(f'{save_path}/task5_{q}_{r}_us.png')
@@ -50,7 +50,7 @@ def draw_nonlinear_lqr(k, x0, time, q, r, save_path):
 
 def task1(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(10)
+    time = set_time(20)
 
     q = 1.0
     r = 1.0
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = True
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = True
     print_taks_4 = True
     print_taks_5 = True
