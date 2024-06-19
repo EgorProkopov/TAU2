@@ -158,7 +158,7 @@ def get_k_lmi_mu(A, B, alpha, x0, mu=None):
                          [P >> np.eye(4),
                           P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0,
                           sub1 >> 0, sub2 >> 0])
-    res = prob.solve()
+    res = prob.solve(solver="CLARABEL")
 
     k = Y.value @ np.linalg.inv(P.value)
 
