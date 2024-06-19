@@ -24,41 +24,6 @@ def get_k_lmi(A, B, alpha):
     return k, new_spec
 
 
-def get_k_lmi_mu(A, B, alpha, x0, mu=None):
-    P = cvxpy.Variable(A.shape, PSD=True)
-    Y = cvxpy.Variable((B.shape[1], B.shape[0]))
-
-    if mu is None:
-        mu_ = cvxpy.Variable((1, 1))
-    else:
-        mu_ = mu
-    sub1 = cvxpy.bmat([
-        [P, x0],
-        [x0.T, [[1]]]
-    ])
-
-    if mu is None:
-        sub2 = cvxpy.bmat([
-            [P, Y.T],
-            [Y, mu_]
-        ])
-    else:
-        sub2 = cvxpy.bmat([
-            [P, Y.T],
-            [Y, [[mu_ * mu_]]]
-        ])
-
-    prob = cvxpy.Problem(cvxpy.Maximize(0) if mu is not None else cvxpy.Minimize(mu_),
-                         [P >> np.eye(4),
-                          P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0,
-                          sub1 >> 0, sub2 >> 0])
-    res = prob.solve(solver="CLARABEL")
-
-    k = Y.value @ np.linalg.inv(P.value)
-
-    return k, np.sqrt(res)
-
-
 def updfcn_lmi(t, x, u, params):
     system_params = get_system_params()
 
@@ -165,8 +130,84 @@ def task2(A, B, C, D):
 
 # ------------------------------------------
 # task 3
+def get_k_lmi_mu(A, B, alpha, x0, mu=None):
+    P = cvxpy.Variable(A.shape, PSD=True)
+    Y = cvxpy.Variable((B.shape[1], B.shape[0]))
+
+    if mu is None:
+        mu_ = cvxpy.Variable((1, 1))
+    else:
+        mu_ = mu
+    sub1 = cvxpy.bmat([
+        [P, x0],
+        [x0.T, [[1]]]
+    ])
+
+    if mu is None:
+        sub2 = cvxpy.bmat([
+            [P, Y.T],
+            [Y, mu_]
+        ])
+    else:
+        sub2 = cvxpy.bmat([
+            [P, Y.T],
+            [Y, [[mu_ * mu_]]]
+        ])
+
+    prob = cvxpy.Problem(cvxpy.Maximize(0) if mu is not None else cvxpy.Minimize(mu_),
+                         [P >> np.eye(4),
+                          P @ A.T + A @ P + 2 * alpha * P + Y.T @ B.T + B @ Y << 0,
+                          sub1 >> 0, sub2 >> 0])
+    res = prob.solve(solver="CLARABEL")
+
+    k = Y.value @ np.linalg.inv(P.value)
+
+    return k, np.sqrt(res)
+
+
+def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
+    save_path = r"chapter4_reports/task3"
+
+    k, mu = get_k_lmi_mu(A, B, alpha, x0.reshape((4, 1)))
+
+    fig, ax = plt.subplots(4, figsize=(8, 12))
+    print(f'K = {k}')
+    print(f'spec(A + B K) = {np.linalg.eigvals(A + B @ k)}')
+    ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
+    ss_nonlin.set_inputs(2)
+
+    ss_lin = control.ss(A + B @ k, np.zeros_like(A), np.zeros_like(A), np.zeros_like(A))
+
+    resp = control.initial_response(ss_lin, T=time, X0=x0)
+    resp_non_lin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+    fig.suptitle(f"$\\alpha={alpha}$")
+    for i in range(4):
+        ax[i].set_title(f"$x_{i + 1}$")
+        ax[i].plot(time, resp_non_lin.states[i], label="nonlinear")
+        ax[i].plot(time, resp.states[i], label="linear")
+
+        ax[i].set_xlabel('t')
+        ax[i].grid(True)
+        ax[i].legend()
+
+    plt.savefig(f'{save_path}/task4_3_{alpha}.png')
+    plt.show()
+
+    plt.clf()
+    plt.title(f"$u(t)$, $\\alpha={alpha}$")
+    plt.plot(time, (k @ resp_non_lin.states).reshape(-1), label="nonlinear")
+    plt.plot(time, (k @ resp.states).reshape(-1), label="linear")
+    plt.legend()
+    plt.savefig(f'{save_path}/task4_3_u_{alpha}.png')
+
+
 def task3(A, B, C, D):
-    pass
+    x0 = np.array([1.0, 0, 0.0, 0.0])
+    time = set_time(5)
+    alphas = [0.1, 1.0, 2.0]
+
+    for alpha in alphas:
+        draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time)
 
 
 # ------------------------------------------
