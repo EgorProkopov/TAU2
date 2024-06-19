@@ -319,7 +319,58 @@ def updfcn_lqg(t, x, u, params):
 
 
 def task5(A, B, C, D):
-    pass
+    x0 = [1.0, 0, 0.0, 0.0]
+    time = set_time(20)
+
+    q = [1.0] * 4
+    r = [0.1] * 2
+
+    l, new_spec = get_kalman(A, C, q, r)
+    print(f"L: \n{l}")
+    print(f"new_spec: \n{new_spec}")
+
+    q_k = 1.0
+    r_k = 1.0
+    Q_k = np.diag(np.ones((A.shape[0]))) * q_k
+    R_k = np.diag(np.ones((B.shape[1]))) * r_k
+
+    k, new_spec_k = get_k_lqr(A, B, Q_k, R_k)
+    k = -k
+
+    print(f"k: \n{k}")
+    print(f"new_spec_k: \n{new_spec_k}")
+
+    save_path = r"chapter5_reports/task5"
+
+    ss_nonlin_lqg = control.NonlinearIOSystem(updfcn_lqg, params={"L": l, "C": C, "D": D, "std_f": q[0], 'K': k})
+    ss_nonlin_lqg.set_inputs(2)
+
+    resp_nonlin_LQG = control.input_output_response(
+        ss_nonlin_lqg, T=time, X0=np.hstack((x0, [1.1, 0.1, 0.1, 0.1])),
+        U=np.zeros((2, len(time)))
+    )
+
+    resp_err = abs(resp_nonlin_LQG.states - resp_nonlin_LQG.states)
+
+    fig, axs = plt.subplots(4, figsize=(8, 12))
+    fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
+
+    for i, state in enumerate(resp_nonlin_LQG.states[:4]):
+        axs[i].plot(time, resp_nonlin_LQG.states[i], label=f'$ x_{i} $')
+        axs_e[i].plot(time, resp_err.states[i + 4], label=f'$ e_{i} $')
+
+    for i in range(4):
+        axs[i].set_xlabel(f"t, [c]", fontsize=12)
+        axs[i].grid(True)
+        axs[i].legend()
+
+    for i in range(4):
+        axs_e[i].set_xlabel(f"t, [c]", fontsize=12)
+        axs_e[i].grid(True)
+        axs_e[i].legend()
+
+    fig.savefig(f'{save_path}/task5_LQG_nonlin_x.jpg')
+    fig_e.savefig(f'{save_path}/task5_LQG_nonlin_err.jpg')
 
 
 if __name__ == "__main__":
