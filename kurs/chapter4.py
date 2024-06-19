@@ -268,22 +268,26 @@ def task4(A, B, C, D):
 # ------------------------------------------
 # task 5
 def task5(A, B, C, D):
-    l, new_spec_l = get_l_lmi(A, C, 0.5)
+    alpha=1
+    l, new_spec_l = get_l_lmi(A, C, alpha)
     l = l.astype(np.float64)
-    k, new_spec_k = get_k_lmi(A, B, 3)
+    k, new_spec_k = get_k_lmi(A, B, alpha)
 
     x0 = np.array([1.0, 0.0, 0.0, 0.0])
+    x0n = np.array([1.1, 0.1, 0.0, 0.1])
     time = set_time(10)
 
     ss_non_lin = control.NonlinearIOSystem(updfcn_modal_full, params={"K": k, "L": l, 'C': C})
     ss_non_lin.set_inputs(2)
-    resp_non_lin_by_output = control.input_output_response(ss_non_lin, T=time, X0=np.hstack((x0, x0 + 0.1)),
+    resp_non_lin_by_output = control.input_output_response(ss_non_lin, T=time, X0=np.hstack((x0, x0n)),
                                                            U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig.suptitle(f"$\\alpha={alpha}$")
     for i in range(4):
         ax[i].plot(time, resp_non_lin_by_output.states[i], label=f'x0: {x0}')
         ax[i].set_xlabel('t')
+        ax[i].set_title(f'x[{i}]')
         ax[i].grid()
         ax[i].legend()
 
