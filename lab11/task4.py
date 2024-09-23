@@ -70,10 +70,10 @@ for i in range(3):
     K, L, Q = generate_Hinf_obs(A, B_1, B_2, C_1, C_2, D_1, D_2, gamma)
     print(f'spec(A-B_2 K) = {np.linalg.eigvals(A - B_2 @ K)}')
     print(f'K = {a2l.to_ltx(K, print_out=False)}')
-    print(f'spec(A + B_2K)={A + B_2 @ K}')
+    print(f'spec(A + B_2K)={np.linalg.eigvals(A + B_2 @ K)}')
     print(f'Q = {a2l.to_ltx(Q, print_out=False)}')
     print(f'L = {a2l.to_ltx(L, print_out=False)}')
-    print(f'spec(A + LC_1)={A + L @ C_1}')
+    print(f'spec(A + LC_1)={np.linalg.eigvals(A + L @ C_1)}')
 
     A_new = np.block([
         [A + B_2 @ K, -B_2 @ K],
