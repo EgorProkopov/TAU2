@@ -67,7 +67,7 @@ for i in range(3):
     print('\n______________________________')
     print(f'-----------VAR_{i + 1}, gamma={gammas[i]}----------\n')
     print('\n\subsubsubsection{gamma = ' + str(gammas[i]) + '}')
-    K, L, Q = generate_Hinf_obs(A, B_1, B_2, C_1, C_2, D_1, D_2, gamma)
+    K, L, Q = generate_Hinf_obs(A, B_1, B_2, C_1, C_2, D_1, D_2, gammas[i])
     print(f'spec(A-B_2 K) = {np.linalg.eigvals(A - B_2 @ K)}')
     print(f'K = {a2l.to_ltx(K, print_out=False)}')
     print(f'spec(A + B_2K)={np.linalg.eigvals(A + B_2 @ K)}')
