@@ -117,4 +117,3 @@ for i in range(3):
     plt.close()
 
     print(f'\[||W||_H_\\{"infty"} = {sigma.max()} \]')
-
