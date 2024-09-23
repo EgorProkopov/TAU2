@@ -8,7 +8,7 @@ import cvxpy
 import sympy.plotting
 import array_to_latex as a2l
 
-from lab11.task1 import get_fraction, get_t
+from lab11.utils import get_fraction, get_t
 
 SAVE_PATH = r"/home/egr/TAU/TAU2/lab11/images/task4"
 
@@ -68,10 +68,12 @@ for i in range(3):
     print(f'-----------VAR_{i + 1}, gamma={gammas[i]}----------\n')
     print('\n\subsubsubsection{gamma = ' + str(gammas[i]) + '}')
     K, L, Q = generate_Hinf_obs(A, B_1, B_2, C_1, C_2, D_1, D_2, gamma)
-    print(f'\[spec(A-B_2 K) = {np.linalg.eigvals(A - B_2 @ K)}\]')
-    print(f'\[K = {a2l.to_ltx(K, print_out=False)}\]')
-    print(f'\[Q = {a2l.to_ltx(Q, print_out=False)}\]')
-    print(f'\[L = {a2l.to_ltx(L, print_out=False)}\]')
+    print(f'spec(A-B_2 K) = {np.linalg.eigvals(A - B_2 @ K)}')
+    print(f'K = {a2l.to_ltx(K, print_out=False)}')
+    print(f'spec(A + B_2K)={A + B_2 @ K}')
+    print(f'Q = {a2l.to_ltx(Q, print_out=False)}')
+    print(f'L = {a2l.to_ltx(L, print_out=False)}')
+    print(f'spec(A + LC_1)={A + L @ C_1}')
 
     A_new = np.block([
         [A + B_2 @ K, -B_2 @ K],
@@ -97,7 +99,7 @@ for i in range(3):
     sympy.print_latex(smatrix)
 
     gram_obs = control.gram(ss, "o")
-    print(f'\[||W||_{"{H_2}"} = {np.sqrt(np.trace(B_new.T @ gram_obs @ B_new))}\]')
+    print(f'||W||_{"{H_2}"} = {np.sqrt(np.trace(B_new.T @ gram_obs @ B_new))}')
 
     # Simulation
     resp = control.forced_response(ss, X0=[1, 2, 3, 4], T=ts, U=w)
@@ -126,9 +128,9 @@ for i in range(3):
     for s in sigma:
         plt.plot(omega, s)
     plt.grid()
-    plt.xlabel('$\omega, рад/с$')
-    plt.ylabel('$\sigma$')
+    plt.xlabel('$\\omega, рад/с$')
+    plt.ylabel('$\\sigma$')
     plt.savefig(os.path.join(SAVE_PATH, f"singular_{i + 1}.png"))
     plt.close()
 
-    print(f'\[||W||_H_\\{"infty"} = {sigma.max()} \]')
+    print(f'||W||_H_\\{"infty"} = {sigma.max()}')

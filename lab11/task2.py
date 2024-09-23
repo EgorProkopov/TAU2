@@ -72,6 +72,7 @@ for i in range(2):
 
     L = generate_H2_obs(A, B_1, C_1, D_1)
     print(f'\[L = {a2l.to_ltx(L, print_out=False)}\]')
+    print(f'spec(A+LC_1) = {np.linalg.eigvals(A + L@C_1)}')
 
     new_A = np.block([[A, B_2 @ K], [-L @ C_1, A + B_2 @ K + L @ C_1]])
     new_B = np.block([[B_1], [-L @ D_1]])
