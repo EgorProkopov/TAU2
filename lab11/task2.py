@@ -8,7 +8,9 @@ import cvxpy
 import sympy.plotting
 import array_to_latex as a2l
 
-from lab11.task1 import get_fraction, get_t
+from lab11.utils import get_fraction, get_t
+
+SAVE_PATH = r"/home/egr/TAU/TAU2/lab11/images/task2"
 
 A = np.array([
     [0, 1],
@@ -27,17 +29,17 @@ C_1 = np.array([[1, 0]])
 D_1 = np.array([[0, 0, 1]])
 
 task1_C_2s = np.array([
-    [[1, 0],
+    [[1, 1],
      [0, 1],
      [0, 0]],
-    [[1, 1],
-     [0, 2],
+    [[0, 0],
+     [1, 0],
      [0, 0]],
 ])
-task1_D_2s = np.array([[[0], [0], [1]], [[0], [0], [2]]])
+task1_D_2s = np.array([[[0], [0], [1]], [[1], [0], [1]]])
 
-ts = get_t(15)
-w = np.vstack([0.05 * np.sin(ts), 0.01 * np.sin(10 * ts), 0.01 * np.sin(10 * ts)])
+ts = get_t(25)
+w = np.vstack([0.2 * np.sin(ts), 0.1 * np.sin(10 * ts), 0.1 * np.cos(10 * ts)])
 
 omega_i = sympy.Symbol("omega",real=True) * sympy.I
 
@@ -52,6 +54,7 @@ def generate_H2_obs(a, b_1, c_1, d_1):
 
 for i in range(2):
     print('\n______________________________')
+    print(f'-----------VAR {i + 1}----------\n')
     task1_C_2 = task1_C_2s[i]
     task1_D_2 = task1_D_2s[i]
     # check_controllability_eigens(A, B_2)
@@ -95,6 +98,7 @@ for i in range(2):
     plt.xlabel('t, c')
     plt.ylabel('z')
     plt.legend()
+    plt.savefig(os.path.join(SAVE_PATH, f"sim_{i + 1}.png"))
     plt.close()
 
     # Frequency response
@@ -106,6 +110,7 @@ for i in range(2):
     plt.xscale('log')
     plt.xlabel('w, rad/s')
     plt.ylabel('Amp')
+    plt.savefig(os.path.join(SAVE_PATH, f"amp_{i + 1}.png"))
     plt.close()
 
     # Singular values plot
@@ -115,6 +120,7 @@ for i in range(2):
     plt.grid()
     plt.xlabel('$\omega, рад/с$')
     plt.ylabel('$\sigma$')
+    plt.savefig(os.path.join(SAVE_PATH, f"singular_{i + 1}.png"))
     plt.close()
 
     print(f'\[||W||_H_\\{"infty"} = {sigma.max()} \]')

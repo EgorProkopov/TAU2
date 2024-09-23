@@ -1,0 +1,49 @@
+______________________________
+-----------VAR 1----------
+
+\[C_2 = \begin{bmatrix}
+  1.00 &  1.00\\
+  0.00 &  1.00\\
+  0.00 &  0.00
+\end{bmatrix}; D_2 = \begin{bmatrix}
+  0.00\\
+  0.00\\
+  1.00
+\end{bmatrix};\]
+\[K = \begin{bmatrix}
+ -1.00 & -2.00
+\end{bmatrix}\]
+\[L = \begin{bmatrix}
+ -2.00\\
+ -1.00
+\end{bmatrix}\]
+\left[\begin{matrix}\frac{- 1.0 i \omega^{3} - 3.0 \omega^{2} - 0.999999999999997 i \omega}{1.0 \omega^{4} - 3.0 i \omega^{3} - 3.00000000000001 \omega^{2} + 0.999999999999998 i \omega} & \frac{- 2.0 i \omega^{3} - 7.0 \omega^{2} + 5.00000000000001 i \omega}{1.0 \omega^{4} - 3.0 i \omega^{3} - 3.00000000000001 \omega^{2} + 0.999999999999998 i \omega} & \frac{4.00000000000001 \omega^{2} - 0.999999999999999 i \omega}{1.0 \omega^{4} - 3.0 i \omega^{3} - 3.00000000000001 \omega^{2} + 0.999999999999998 i \omega}\\\frac{- 4.0 i \omega - 0.999999999999997}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.00000000000001 \omega^{2} + 4.0 i \omega + 0.999999999999997} & \frac{- 1.0 i \omega^{3} - 4.0 \omega^{2} + 2.0 i \omega - 1.0}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.00000000000001 \omega^{2} + 4.0 i \omega + 0.999999999999997} & \frac{4.0 \omega^{2} - 0.999999999999997 i \omega}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.00000000000001 \omega^{2} + 4.0 i \omega + 0.999999999999997}\\\frac{- 4.0 \omega^{2} + 1.0 i \omega}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.0 \omega^{2} + 4.00000000000001 i \omega + 1.00000000000001} & \frac{- 4.0 \omega^{2} + 5.00000000000001 i \omega + 1.0}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.0 \omega^{2} + 4.00000000000001 i \omega + 1.00000000000001} & \frac{- 4.0 i \omega^{3} - 0.999999999999997 \omega^{2}}{1.0 \omega^{4} - 4.0 i \omega^{3} - 6.0 \omega^{2} + 4.00000000000001 i \omega + 1.00000000000001}\end{matrix}\right]
+\[||W||_{H_2} = 3.999999999999997\]
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:435: FutureWarning: bode_plot() return value of mag, phase, omega is deprecated; use frequency_response()
+  warnings.warn(
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:2458: FutureWarning: `singular_values_plot` return values of sigma, omega is deprecated; use singular_values_response()
+  warnings.warn(
+\[||W||_H_\infty = 5.3892339521572215 \]
+
+______________________________
+-----------VAR 2----------
+
+\[C_2 = \begin{bmatrix}
+  0.00 &  0.00\\
+  1.00 &  0.00\\
+  0.00 &  0.00
+\end{bmatrix}; D_2 = \begin{bmatrix}
+  1.00\\
+  0.00\\
+  1.00
+\end{bmatrix};\]
+\[K = \begin{bmatrix}
+ -0.71 & -1.19
+\end{bmatrix}\]
+\[L = \begin{bmatrix}
+ -2.00\\
+ -1.00
+\end{bmatrix}\]
+\left[\begin{matrix}\frac{- 2.60342067737582 \omega^{2} + 0.707106781186551 i \omega}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655} & \frac{- 2.60342067737582 \omega^{2} + 3.31052745856237 i \omega + 0.70710678118655}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655} & \frac{- 2.60342067737582 i \omega^{3} - 0.707106781186547 \omega^{2}}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655}\\\frac{- 1.0 i \omega^{3} - 3.18920711500272 \omega^{2} + 4.085521011192 i \omega}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.707106781186551} & \frac{- 1.0 i \omega^{3} - 4.18920711500273 \omega^{2} + 7.27472812619472 i \omega + 4.08552101119199}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.707106781186551} & \frac{- 2.60342067737582 i \omega - 0.707106781186549}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.707106781186551}\\\frac{- 2.60342067737582 \omega^{2} + 0.707106781186551 i \omega}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655} & \frac{- 2.60342067737582 \omega^{2} + 3.31052745856237 i \omega + 0.70710678118655}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655} & \frac{- 2.60342067737582 i \omega^{3} - 0.707106781186547 \omega^{2}}{1.0 \omega^{4} - 3.18920711500272 i \omega^{3} - 4.08552101119199 \omega^{2} + 2.60342067737582 i \omega + 0.70710678118655}\end{matrix}\right]
+\[||W||_{H_2} = 4.09419586750897\]
+\[||W||_H_\infty = 6.321842254237864 \]

@@ -8,6 +8,8 @@ import cvxpy
 import sympy.plotting
 import array_to_latex as a2l
 
+from lab11.utils import get_t, get_fraction
+
 np.set_printoptions(precision=2)
 sympy.init_printing()
 p = sympy.Symbol("p")
@@ -15,10 +17,6 @@ s = sympy.Symbol("s")
 t = sympy.Symbol("t")
 w = sympy.Symbol("w")
 I = sympy.I
-
-def get_t(end_t = 10, dt=0.001, start_t = 0):
-    return np.linspace(start_t, end_t, int(end_t / dt))
-
 
 def get_controllability_matrix(A, B):
     ctrb_m = np.hstack((B, *[(np.linalg.matrix_power(A, i)) @ B for i in range(1, A.shape[0])]))
@@ -47,6 +45,8 @@ def check_observability_eigens(C, A):
         print(
             f"   {np.array([val])}: {'observable' if np.linalg.matrix_rank(np.vstack(((A - val * np.eye(A.shape[0])), C))) == A.shape[0] else 'not observable'}")
 
+SAVE_PATH = r"/home/egr/TAU/TAU2/lab11/images/task1"
+
 A = np.array([
     [0, 1],
     [0, 0]
@@ -64,29 +64,23 @@ C_1 = np.array([[1, 0]])
 D_1 = np.array([[0, 0, 1]])
 
 task1_C_2s = np.array([
-    [[1, 0],
+    [[1, 1],
      [0, 1],
      [0, 0]],
-    [[1, 1],
-     [0, 2],
+    [[0, 0],
+     [1, 0],
      [0, 0]],
 ])
-task1_D_2s = np.array([[[0], [0], [1]], [[0], [0], [2]]])
+task1_D_2s = np.array([[[0], [0], [1]], [[1], [0], [1]]])
 
-ts = get_t(15)
-w = np.vstack([0.05 * np.sin(ts), 0.01 * np.sin(10 * ts), 0.01 * np.sin(10 * ts)])
-
-omega_i = sympy.Symbol("omega",real=True) * sympy.I
-
-def get_fraction(tf):
-    num, den = tf.num[0][0], tf.den[0][0]
-    den_ = sum((0 if abs(co) < 1e-3 else co) * omega_i**i for i, co in enumerate(reversed(den)))
-    num_ = sum((0 if abs(co) < 1e-3 else co) * omega_i**i for i, co in enumerate(reversed(num)))
-    return num_ / den_
+ts = get_t(25)
+#w = np.vstack([0.05 * np.sin(ts), 0.01 * np.sin(10 * ts), 0.01 * np.sin(10 * ts)])
+w = np.vstack([0.2 * np.sin(ts), 0.1 * np.sin(10 * ts), 0.1 * np.cos(10 * ts)])
 
 
 for i in range(2):
     print('\n______________________________')
+    print(f'-----------VAR {i+1}----------\n')
     task1_C_2 = task1_C_2s[i]
     task1_D_2 = task1_D_2s[i]
     check_controllability_eigens(A, B_2)
@@ -94,12 +88,12 @@ for i in range(2):
     Q = task1_C_2.T @ task1_C_2
     R = task1_D_2.T @ task1_D_2
     K, S, E = control.lqr(A, B_2, Q, R)
-    print(f'\[C_2 = {a2l.to_ltx(task1_C_2, print_out=False)}; D_2 = {a2l.to_ltx(task1_D_2, print_out=False)};\]')
-    print(f'\[C_2^T D_2 = 0: {np.all(task1_C_2.T @ task1_D_2 == 0)}\]')
-    print(f'\[D_2^T D_2 \\text{"{ обратима}"}: {np.linalg.det(task1_D_2.T @ task1_D_2) != 0}\]')
-    print(f'\[spec(A-B_2 K) = {a2l.to_ltx(E, print_out=False)}\]')
-    print(f'\[Q = {a2l.to_ltx(S, print_out=False)}\]')
-    print(f'\[K = {a2l.to_ltx(K, print_out=False)}\]')
+    print(f'C_2 = {a2l.to_ltx(task1_C_2, print_out=False)}; D_2 = {a2l.to_ltx(task1_D_2, print_out=False)};')
+    print(f'C_2^T D_2 = 0: {np.all(task1_C_2.T @ task1_D_2 == 0)}')
+    print(f'D_2^T D_2 \\text{"{ обратима}"}: {np.linalg.det(task1_D_2.T @ task1_D_2) != 0}')
+    print(f'spec(A-B_2 K) = {a2l.to_ltx(E, print_out=False)}')
+    print(f'Q = {a2l.to_ltx(S, print_out=False)}')
+    print(f'K = {a2l.to_ltx(K, print_out=False)}')
 
     ss = control.ss(A - B_2 @ K, B_1, task1_C_2 - task1_D_2 @ K, np.zeros((task1_C_2.shape[0], B_1.shape[1])))
     tf = control.ss2tf(ss)
@@ -114,7 +108,7 @@ for i in range(2):
     sympy.print_latex(smatrix)
 
     gram_obs = control.gram(ss, "o")
-    print(f'\[||W||_{"{H_2}"} = {np.sqrt(np.trace(B_1.T @ gram_obs @ B_1))}\]')
+    print(f'||W||_{"{H_2}"} = {np.sqrt(np.trace(B_1.T @ gram_obs @ B_1))}')
 
     # Simulation
     resp = control.forced_response(ss, X0=np.ones((2, 1)), T=ts, U=w)
@@ -123,6 +117,7 @@ for i in range(2):
     plt.xlabel('t, c')
     plt.ylabel('z')
     plt.legend()
+    plt.savefig(os.path.join(SAVE_PATH, f"sim_{i+1}.png"))
     plt.close()
 
     # Frequency response
@@ -134,6 +129,7 @@ for i in range(2):
     plt.xscale('log')
     plt.xlabel('w, rad/s')
     plt.ylabel('Amp')
+    plt.savefig(os.path.join(SAVE_PATH, f"amp_{i+1}.png"))
     plt.close()
 
     # Singular values plot
@@ -141,8 +137,9 @@ for i in range(2):
     for s in sigma:
         plt.plot(omega, s)
     plt.grid()
-    plt.xlabel('$\omega, рад/с$')
-    plt.ylabel('$\sigma$')
+    plt.xlabel('$\\omega, рад/с$')
+    plt.ylabel('$\\sigma$')
+    plt.savefig(os.path.join(SAVE_PATH, f"singular_{i+1}.png"))
     plt.close()
 
-    print(f'\[||W||_H_\\{"infty"} = {sigma.max()} \]')
+    print(f'||W||_H_\\{"infty"} = {sigma.max()}')

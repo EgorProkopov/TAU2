@@ -1,0 +1,42 @@
+______________________________
+-----------VAR_1, gamma=2----------
+
+
+\subsubsubsection{gamma = 2}
+\[spec(A-B_2 K) = [-0.68662394 -5.22874183]\]
+\[K = \begin{bmatrix}
+  3.59 &  5.92
+\end{bmatrix}\]
+\left[\begin{matrix}\frac{1.0 i \omega + 2.32518647194583}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025296} & \frac{2.0 i \omega + 3.32518647194583}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025296} & 0\\- \frac{3.59017929025295}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025295} & \frac{1.0 i \omega - 3.59017929025295}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025295} & 0\\- \frac{3.59017929025295 i \omega}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025296} & \frac{- 9.50554505245174 i \omega - 3.59017929025296}{- 1.0 \omega^{2} + 5.91536576219879 i \omega + 3.59017929025296} & 0\end{matrix}\right]
+\[||W||_{H_2} = 3.2453005480992947\]
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:435: FutureWarning: bode_plot() return value of mag, phase, omega is deprecated; use frequency_response()
+  warnings.warn(
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:2458: FutureWarning: `singular_values_plot` return values of sigma, omega is deprecated; use singular_values_response()
+  warnings.warn(
+\[||W||_H_\infty = 1.97404862347668 \]
+
+______________________________
+-----------VAR_2, gamma=4----------
+
+
+\subsubsubsection{gamma = 4}
+\[spec(A-B_2 K) = [-0.80276113 -1.4830667 ]\]
+\[K = \begin{bmatrix}
+  1.19 &  2.29
+\end{bmatrix}\]
+\left[\begin{matrix}\frac{1.0 i \omega + 1.09527952838039}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & \frac{2.0 i \omega + 2.09527952838039}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & 0\\- \frac{1.19054830259995}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & \frac{1.0 i \omega - 1.19054830259995}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & 0\\- \frac{1.19054830259995 i \omega}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & \frac{- 3.47637613358029 i \omega - 1.19054830259995}{- 1.0 \omega^{2} + 2.28582783098034 i \omega + 1.19054830259995} & 0\end{matrix}\right]
+\[||W||_{H_2} = 2.4646010256657487\]
+\[||W||_H_\infty = 2.5637970798462213 \]
+
+______________________________
+-----------VAR_3, gamma=6----------
+
+
+\subsubsubsection{gamma = 6}
+\[spec(A-B_2 K) = [-0.85430308 -1.25885464]\]
+\[K = \begin{bmatrix}
+  1.08 &  2.11
+\end{bmatrix}\]
+\left[\begin{matrix}\frac{1.0 i \omega + 1.03771432270534}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & \frac{2.0 i \omega + 2.03771432270534}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & 0\\- \frac{1.07544340351413}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & \frac{1.0 i \omega - 1.07544340351413}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & 0\\- \frac{1.07544340351413 i \omega}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & \frac{- 3.1886011297336 i \omega - 1.07544340351413}{- 1.0 \omega^{2} + 2.11315772621947 i \omega + 1.07544340351413} & 0\end{matrix}\right]
+\[||W||_{H_2} = 2.452120361196852\]
+\[||W||_H_\infty = 2.6736558280689415 \]

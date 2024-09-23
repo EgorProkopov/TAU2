@@ -1,0 +1,71 @@
+______________________________
+-----------VAR 1----------
+
+Eigen values of A:
+   [0.]: controllable
+   [0.]: controllable
+Eigen values of A:
+   [0.]: observable
+   [0.]: observable
+C_2 = \begin{bmatrix}
+  1.00 &  1.00\\
+  0.00 &  1.00\\
+  0.00 &  0.00
+\end{bmatrix}; D_2 = \begin{bmatrix}
+  0.00\\
+  0.00\\
+  1.00
+\end{bmatrix};
+C_2^T D_2 = 0: True
+D_2^T D_2 \text{ обратима}: True
+spec(A-B_2 K) = \begin{bmatrix}
+ -1.00 + 0.00j & -1.00 + -0.00j
+\end{bmatrix}
+Q = \begin{bmatrix}
+  1.00 &  1.00\\
+  1.00 &  2.00
+\end{bmatrix}
+K = \begin{bmatrix}
+  1.00 &  2.00
+\end{bmatrix}
+\left[\begin{matrix}\frac{1.0 i \omega}{- 1.0 \omega^{2} + 1.0 i \omega} & \frac{2.0 i \omega}{- 1.0 \omega^{2} + 1.0 i \omega} & 0\\- \frac{1.0}{- 1.0 \omega^{2} + 2.0 i \omega + 1.0} & \frac{1.0 i \omega - 1.0}{- 1.0 \omega^{2} + 2.0 i \omega + 1.0} & 0\\- \frac{1.0 i \omega}{- 1.0 \omega^{2} + 2.0 i \omega + 1.0} & \frac{- 3.0 i \omega - 1.0}{- 1.0 \omega^{2} + 2.0 i \omega + 1.0} & 0\end{matrix}\right]
+||W||_{H_2} = 2.449489742783178
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:435: FutureWarning: bode_plot() return value of mag, phase, omega is deprecated; use frequency_response()
+  warnings.warn(
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/control/freqplot.py:2458: FutureWarning: `singular_values_plot` return values of sigma, omega is deprecated; use singular_values_response()
+  warnings.warn(
+||W||_H_\infty = 2.7613402405633707
+
+______________________________
+-----------VAR 2----------
+
+Eigen values of A:
+   [0.]: controllable
+   [0.]: controllable
+Eigen values of A:
+   [0.]: observable
+   [0.]: observable
+C_2 = \begin{bmatrix}
+  0.00 &  0.00\\
+  1.00 &  0.00\\
+  0.00 &  0.00
+\end{bmatrix}; D_2 = \begin{bmatrix}
+  1.00\\
+  0.00\\
+  1.00
+\end{bmatrix};
+C_2^T D_2 = 0: True
+D_2^T D_2 \text{ обратима}: True
+spec(A-B_2 K) = \begin{bmatrix}
+ -0.59 + 0.59j & -0.59 + -0.59j
+\end{bmatrix}
+Q = \begin{bmatrix}
+  1.68 &  1.41\\
+  1.41 &  2.38
+\end{bmatrix}
+K = \begin{bmatrix}
+  0.71 &  1.19
+\end{bmatrix}
+\left[\begin{matrix}- \frac{0.707106781186548 i \omega}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & \frac{- 1.89631389618927 i \omega - 0.707106781186549}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & 0\\\frac{1.0 i \omega + 1.18920711500272}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & \frac{1.0 i \omega + 2.18920711500272}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & 0\\- \frac{0.707106781186548 i \omega}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & \frac{- 1.89631389618927 i \omega - 0.707106781186549}{- 1.0 \omega^{2} + 1.18920711500272 i \omega + 0.707106781186547} & 0\end{matrix}\right]
+||W||_{H_2} = 2.927529165655995
+||W||_H_\infty = 4.137324495737229
