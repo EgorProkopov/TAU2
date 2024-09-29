@@ -21,7 +21,7 @@ if __name__ == '__main__':
     w = sympy.Symbol("w")
     I = sympy.I
 
-    SAVE_PATH = r"/home/egr/TAU/TAU2/lab12/images/task2"
+    SAVE_PATH = r"/home/egr/TAU/TAU2/lab12/images/task3"
 
     # %%
     task3_A1 = np.array([

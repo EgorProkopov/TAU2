@@ -1,0 +1,47 @@
+\[A_1 = \begin{bmatrix}
+  1.00 &  0.00 &  0.00\\
+  0.00 &  3.00 &  1.00\\
+  0.00 & -1.00 &  4.00
+\end{bmatrix}\]
+\[A_2 = \begin{bmatrix}
+  0.00 &  1.00 &  0.00 &  0.00\\
+ -1.00 &  0.00 &  0.00 &  0.00\\
+  0.00 &  0.00 &  0.00 &  2.00\\
+  0.00 &  0.00 & -2.00 &  0.00
+\end{bmatrix}\]
+\[B_1 = \begin{bmatrix}
+  1.00\\
+  1.00\\
+  1.00
+\end{bmatrix}\]
+\[B_1 = \begin{bmatrix}
+  0.00 &  0.00 &  0.00 &  0.00\\
+  0.00 &  0.00 &  0.00 &  0.00\\
+  0.00 &  0.00 &  0.00 &  0.00
+\end{bmatrix}\]
+\[C_2 = \begin{bmatrix}
+  1.00 &  1.00 &  1.00
+\end{bmatrix}\]
+\[D_2 = \begin{bmatrix}
+  1.00 &  1.00 &  1.00 &  1.00
+\end{bmatrix}\]
+/home/egr/TAU/TAU2/venv/lib/python3.12/site-packages/cvxpy/reductions/solvers/solving_chain.py:356: FutureWarning:
+    You specified your problem should be solved by ECOS. Starting in
+    CXVPY 1.6.0, ECOS will no longer be installed by default with CVXPY.
+    Please either add ECOS as an explicit install dependency to your project
+    or switch to our new default solver, Clarabel, by either not specifying a
+    solver argument or specifying ``solver=cp.CLARABEL``. To suppress this
+    warning while continuing to use ECOS, you can filter this warning using
+    Python's ``warnings`` module until you are using 1.6.0.
+
+  warnings.warn(ECOS_DEP_DEPRECATION_MSG, FutureWarning)
+Optimization error:  0.0
+\[K_1 = \begin{bmatrix}
+ -6.35 & -94.35 &  84.56
+\end{bmatrix}\]
+\[spec(A + B_1 K_1) = \begin{bmatrix}
+ -1.09 + 0.00j & -3.53 + 0.86j & -3.53 + -0.86j
+\end{bmatrix}\]
+\[K_2 = \begin{bmatrix}
+  1.19 & -0.42 &  0.84 &  1.41
+\end{bmatrix}\]
