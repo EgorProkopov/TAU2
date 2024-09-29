@@ -3,8 +3,6 @@ import numpy as np
 import control
 import sympy
 import os
-import scipy
-import cvxpy
 import sympy.plotting
 import array_to_latex as a2l
 
