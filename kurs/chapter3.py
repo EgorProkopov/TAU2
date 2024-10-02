@@ -51,6 +51,23 @@ def updfcn_modal(t, x, u, params):
     ])
 
 
+def draw_nonlin_response(ss_nonlin, x0, time, title="new"):
+    response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+
+    for i in range(4):
+        ax[i].set_title(f"$x_{i + 1}$")
+        ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
+
+        ax[i].set_xlabel('t')
+        ax[i].grid()
+        ax[i].legend(fontsize=12)
+
+        plt.savefig(f'chapter3_reports/task2/task2_{title}.jpg')
+
+
 def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
     resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
@@ -71,7 +88,7 @@ def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
 
 
 def task1(A, B, C, D):
-    time = set_time(5)
+    time = set_time(2)
 
     gamma = set_gamma([-1.0, -2.0, -3.0, -4.0])
     y = set_y(A, B)
@@ -86,7 +103,7 @@ def task1(A, B, C, D):
     x0_list = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.2, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ]
 
@@ -113,6 +130,12 @@ def task2(A, B, C, D):
             [1, -1, 0, 0],
             [0, 0, -2, -2],
             [0, 0, 2, -2]
+        ]),
+        np.array([
+            [-0.1, 0, 0, 0],
+            [0, -0.11, 0, 0],
+            [0, 0, -0.13, 0],
+            [0, 0, 0, -0.14]
         ])
     ]
 
@@ -125,6 +148,8 @@ def task2(A, B, C, D):
         ss_nonlin = control.NonlinearIOSystem(updfcn_modal, params={"K": k})
         ss_nonlin.set_inputs(2)
         response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
+        draw_nonlin_response(ss_nonlin, x0, time, str(np.linalg.eigvals(gamma)))
+
         print(f'gamma:\n {np.linalg.eigvals(gamma)} \n\n'
             f'max a:\n {round(np.abs(response_nonlin.states[0]).max(), 1)}\n'
             f'max phi:\n {round(np.abs(response_nonlin.states[3]).max(), 1)}\n'
@@ -335,10 +360,10 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = False
-    print_taks_2 = False
+    print_taks_2 = True
     print_taks_3 = False
     print_taks_4 = False
-    print_taks_5 = True
+    print_taks_5 = False
 
     if print_taks_1:
         task1(A, B, C, D)
