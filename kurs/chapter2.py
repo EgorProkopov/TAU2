@@ -86,13 +86,13 @@ def task2(A, B, C, D):
 def draw_linear_response(ss, x0, time):
     response = control.initial_response(ss, T=time, X0=x0)
     fig, ax = plt.subplots(4, figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
     for i in range(4):
-        ax[i].set_title(f"$x_{i+1}$")
         ax[i].plot(time, response.states[i], linewidth=8, label="linear")
-        ax[i].set_xlabel('t')
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
+        ax[i].set_xlabel('t', fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
     plt.savefig(f"chapter2_reports/task3_{'_'.join([str(x) for x in x0])}.png")
 
@@ -136,16 +136,16 @@ def draw_and_compare_nonlinear_response(ss_lin, ss_nonlin, x0, time):
     resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4, figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, resp.states[i], label='linear', linewidth=8)
         ax[i].plot(time, resp_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
     plt.savefig(f"chapter2_reports/task4_{'_'.join([str(x) for x in x0])}.png")
 
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = True
-    print_taks_2 = False
+    print_taks_2 = True
     print_taks_3 = True
     print_taks_4 = True
 
