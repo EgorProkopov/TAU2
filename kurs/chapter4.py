@@ -1,10 +1,12 @@
 import numpy as np
 import scipy
 import sympy
+import matplotlib
 import matplotlib.pyplot as plt
 
 import control
 import cvxpy
+from sympy.abc import alpha
 
 from kurs.chapter1 import *
 from kurs.chapter2 import *
@@ -50,7 +52,7 @@ def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=12)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=14)
 
     for i in range(4):
         ax[i].set_title(f"$x_{i + 1}$")
@@ -69,12 +71,12 @@ def task1(A, B, C, D):
     k, new_spec = get_k_lmi(A, B, alpha)
 
     x0_list = [
-        [1.0, 0.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0, 0.0],
-        # [0.0, 0.0, 1.0, 0.0],
-        [0.0, 0.0, 0.0, 1.0]
+        # [1.0, 0.0, 0.0, 0.0],
+        # [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        # [0.0, 0.0, 0.0, 1.0]
     ]
-    time = set_time(5)
+    time = set_time(1.5)
 
     ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
     ss_nonlin.set_inputs(2)
@@ -90,7 +92,7 @@ def task1(A, B, C, D):
 
 # ------------------------------------------
 # task 2
-def draw_compare_nonlinear_alphas(A, B, x0, time, alphas):
+def draw_compare_nonlinear_alphas(A, B, x0, time, alphas, title='new'):
     save_path = r"chapter4_reports/task2"
     fig, ax = plt.subplots(4, figsize=(8, 12))
     us = []
@@ -109,14 +111,14 @@ def draw_compare_nonlinear_alphas(A, B, x0, time, alphas):
 
         print(
             f'alpha: ${alpha}$  max x: {round(np.abs(resp_nonlin.states[0]).max(), 2)} max phi:  {round(np.abs(resp_nonlin.states[2]).max(), 2)}  max u: {round(np.abs(k @ resp_nonlin.states).max(), 1)} \\\\')
-    plt.savefig(f'{save_path}/task4_2_{"_".join([str(x) for x in x0])}.png')
+    plt.savefig(f'{save_path}/task4_2_{title}.png')
     plt.close()
 
     plt.title(f"$u(t)$, $x_0=${x0}")
     for i in range(len(alphas)):
         plt.plot(time, us[i], label=f"$\\alpha={alphas[i]}$")
     plt.legend()
-    plt.savefig(f'{save_path}/task4_2_u_{"_".join([str(x) for x in x0])}.png')
+    plt.savefig(f'{save_path}/task4_2_u_{title}.png')
 
     plt.close()
 
@@ -124,8 +126,12 @@ def draw_compare_nonlinear_alphas(A, B, x0, time, alphas):
 def task2(A, B, C, D):
     x0 = [1.0, 1.0, 0.0, 0]
     time = set_time(5)
-    alphas = [0.1, 0.5, 1, 2]
-    draw_compare_nonlinear_alphas(A, B, x0, time, alphas=alphas)
+    alphas = [0.1, 0.5, 1]
+    draw_compare_nonlinear_alphas(A, B, x0, time, alphas=alphas, title=str(alphas))
+
+    time = set_time(0.2)
+    alphas = [3, 3.5]
+    draw_compare_nonlinear_alphas(A, B, x0, time, alphas=alphas, title=str(alphas))
 
 
 # ------------------------------------------
@@ -297,6 +303,12 @@ def task5(A, B, C, D):
 
 
 if __name__ == "__main__":
+    font = {
+        'weight': 'bold',
+        'size': 10
+    }
+    matplotlib.rc('font', **font)
+
     np.set_printoptions(precision=2)
 
     A = get_A()
@@ -305,10 +317,10 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = False
-    print_taks_2 = False
+    print_taks_2 = True
     print_taks_3 = False
     print_taks_4 = False
-    print_taks_5 = True
+    print_taks_5 = False
 
     if print_taks_1:
         task1(A, B, C, D)

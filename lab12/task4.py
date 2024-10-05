@@ -21,7 +21,6 @@ if __name__ == '__main__':
 
     SAVE_PATH = r"/home/egr/TAU/TAU2/lab12/images/task4"
 
-    # %%
     task4_A1 = np.array([
         [1, 0, 0, 0],
         [0, 2, 0, 0],
