@@ -274,14 +274,18 @@ def task4(A, B, C, D):
 # ------------------------------------------
 # task 5
 def task5(A, B, C, D):
-    alpha=1
-    l, new_spec_l = get_l_lmi(A, C, alpha)
+    alpha_k = 0.1
+    alpha_l = 1.0
+    l, new_spec_l = get_l_lmi(A, C, alpha_l)
     l = l.astype(np.float64)
-    k, new_spec_k = get_k_lmi(A, B, alpha)
+    k, new_spec_k = get_k_lmi(A, B, alpha_k)
+
+    print(f"K:\n {k}")
+    print(f"L:\n {l}")
 
     x0 = np.array([1.0, 0.0, 0.0, 0.0])
     x0n = np.array([1.1, 0.1, 0.0, 0.1])
-    time = set_time(10)
+    time = set_time(30)
 
     ss_non_lin = control.NonlinearIOSystem(updfcn_modal_full, params={"K": k, "L": l, 'C': C})
     ss_non_lin.set_inputs(2)
@@ -289,17 +293,17 @@ def task5(A, B, C, D):
                                                            U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4, figsize=(8, 12))
-    fig.suptitle(f"$\\alpha={alpha}$")
+    fig.suptitle(f"$\\alpha={alpha_k}, \\alpha={alpha_l}$")
     for i in range(4):
         ax[i].plot(time, resp_non_lin_by_output.states[i], label=f'x0: {x0}')
         ax[i].set_xlabel('t')
-        ax[i].set_title(f'x[{i}]')
+        # ax[i].set_title(f'x[{i}]')
         ax[i].grid()
         ax[i].legend()
 
     plt.xlabel('t')
     plt.legend()
-    plt.savefig(f'chapter4_reports/task5/task4_5_new.png')
+    plt.savefig(f'chapter4_reports/task5/task5{alpha_k, alpha_l}.png')
 
 
 if __name__ == "__main__":
@@ -319,7 +323,7 @@ if __name__ == "__main__":
     print_taks_1 = False
     print_taks_2 = False
     print_taks_3 = False
-    print_taks_4 = True
+    print_taks_4 = False
     print_taks_5 = True
 
     if print_taks_1:

@@ -322,9 +322,15 @@ def updfcn_modal_full(t, x, u, params):
 
 def task5(A, B, C, D):
     y = np.ones((A.shape[0], C.shape[0]))
-    gamma = set_gamma([-1.0, -2.0, -3.0, -4.0])
-    l, new_spec = get_l_modal(A, C, gamma, y)
-    k, new_spec = get_k_modal(A, B, gamma, set_y(A, B))
+    lambdas_k = [-1.0, -2.0, -3.0, -4.0]
+    lambdas_l = [-1.1, -1.2, -1.3, -1.4]
+    gamma_k = set_gamma(lambdas_k)
+    gamma_l = set_gamma(lambdas_l)
+    l, new_spec = get_l_modal(A, C, gamma_l, y)
+    k, new_spec = get_k_modal(A, B, gamma_k, set_y(A, B))
+
+    print(f"L:\n{l}")
+    print(f"K:\n{k}")
 
     time = set_time(5)
     x0 = np.array([0.0, 0.0, 1.0, 0.0])
@@ -348,7 +354,7 @@ def task5(A, B, C, D):
         ax[i].grid()
         ax[i].legend(fontsize=12)
 
-        plt.savefig(f'chapter3_reports/task5/task1_{"_".join([str(x) for x in x0])}.jpg')
+        plt.savefig(f'chapter3_reports/task5/task1_{lambdas_k}{lambdas_l}.jpg')
 
 
 if __name__ == "__main__":
@@ -364,10 +370,10 @@ if __name__ == "__main__":
     C = get_C()
     D = get_D()
 
-    print_taks_1 = True
-    print_taks_2 = True
-    print_taks_3 = True
-    print_taks_4 = True
+    print_taks_1 = False
+    print_taks_2 = False
+    print_taks_3 = False
+    print_taks_4 = False
     print_taks_5 = True
 
     if print_taks_1:

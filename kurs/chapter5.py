@@ -327,17 +327,17 @@ def updfcn_lqg(t, x, u, params):
 
 def task5(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(12)
+    time = set_time(30)
 
-    q = [1.0] * 4
-    r = [0.1] * 2
+    q_l = [1.0] * 4
+    r_l = [0.1] * 2
 
-    l, new_spec = get_kalman(A, C, q, r)
+    l, new_spec = get_kalman(A, C, q_l, r_l)
     print(f"L: \n{l}")
     print(f"new_spec: \n{new_spec}")
 
-    q_k = 1.0
-    r_k = 1.0
+    q_k = 10.0
+    r_k = 0.1
     Q_k = np.diag(np.ones((A.shape[0]))) * q_k
     R_k = np.diag(np.ones((B.shape[1]))) * r_k
 
@@ -349,7 +349,7 @@ def task5(A, B, C, D):
 
     save_path = r"chapter5_reports/task5"
 
-    ss_nonlin_lqg = control.NonlinearIOSystem(updfcn_lqg, params={"L": l, "C": C, "D": D, "std_f": q[0], 'K': k})
+    ss_nonlin_lqg = control.NonlinearIOSystem(updfcn_lqg, params={"L": l, "C": C, "D": D, "std_f": q_l[0], 'K': k})
     ss_nonlin_lqg.set_inputs(2)
 
     resp_nonlin_LQG = control.input_output_response(
@@ -374,8 +374,8 @@ def task5(A, B, C, D):
         axs_e[i].grid(True)
         axs_e[i].legend()
 
-    fig.savefig(f'{save_path}/task5_LQG_nonlin_x.jpg')
-    fig_e.savefig(f'{save_path}/task5_LQG_nonlin_err.jpg')
+    fig.savefig(f'{save_path}/task5_LQG_nonlin_x{q_k}_{q_l}.jpg')
+    fig_e.savefig(f'{save_path}/task5_LQG_nonlin_err{q_k}_{q_l}.jpg')
 
 
 if __name__ == "__main__":
