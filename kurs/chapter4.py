@@ -209,7 +209,7 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
 def task3(A, B, C, D):
     x0 = np.array([1.0, 0.0, 0.0, 0.0])
-    time = set_time(30)
+    time = set_time(10)
     alphas = [0.1, 0.5, 1.0]
 
     for alpha in alphas:
@@ -305,7 +305,7 @@ def task5(A, B, C, D):
 if __name__ == "__main__":
     font = {
         'weight': 'bold',
-        'size': 10
+        'size': 16
     }
     matplotlib.rc('font', **font)
 
@@ -317,10 +317,10 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = False
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = False
-    print_taks_4 = False
-    print_taks_5 = False
+    print_taks_4 = True
+    print_taks_5 = True
 
     if print_taks_1:
         task1(A, B, C, D)

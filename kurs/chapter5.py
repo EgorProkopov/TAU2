@@ -44,16 +44,20 @@ def draw_nonlinear_lqr(k, x0, time, q, r, save_path):
     ax_u.set_ylabel('$x_i$')
     ax_u.grid()
 
-    fig.savefig(f'{save_path}/task{q}_{r}_states.png')
-    fig_u.savefig(f'{save_path}/task5_{q}_{r}_us.png')
+    fig.savefig(f'{save_path}/task{x0}{q}_{r}_states.png')
+    fig_u.savefig(f'{save_path}/task{x0}_{q}_{r}_us.png')
 
 
 def task1(A, B, C, D):
-    x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(20)
+    x0 = [0.0, 0, 1.3, 0.0]
+    time = set_time(5)
+
+    # q = 1.0
+    # r = 1.0
 
     q = 1.0
     r = 1.0
+
     Q = np.diag(np.ones((A.shape[0]))) * q
     R = np.diag(np.ones((B.shape[1]))) * r
 
@@ -64,7 +68,7 @@ def task1(A, B, C, D):
     print(f"K: \n{k}")
     print(f"new_spec: \n{new_spec}")
 
-    save_path = r"chapter5_reports/task1"
+    save_path = f"chapter5_reports//task1"
     draw_nonlinear_lqr(k, x0, time, q, r, save_path)
 
 
@@ -72,9 +76,12 @@ def task1(A, B, C, D):
 # task 2
 def task2(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
-    time = set_time(30)
-    qs = [10.0, 1.0, 10.0, 0.1]
-    rs = [1.0, 10.0, 0.1, 10.0]
+    time = set_time(75)
+    # qs = [10.0, 1.0, 10.0, 0.1]
+    # rs = [1.0, 10.0, 0.1, 10.0]
+
+    qs = [0.000001]
+    rs = [100000]
 
     for q, r in zip(qs, rs):
         Q = np.diag(np.ones((A.shape[0]))) * q
@@ -254,7 +261,7 @@ def task4(A, B, C, D):
     fig, axs = plt.subplots(4, figsize=(8, 12))
     fig.suptitle("x")
     fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
-    fig_e.suptitle("err")
+    fig_e.suptitle("error")
     for i, state in enumerate(response.states[:4]):
         axs[i].plot(time, state, label=f'$ x_{i} $')
         axs_e[i].plot(time, response.states[4 + i], label=f'$ e_{i} $')
@@ -372,6 +379,11 @@ def task5(A, B, C, D):
 
 
 if __name__ == "__main__":
+    font = {
+        'weight': 'bold',
+        'size': 12
+    }
+    matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)
 
     A = get_A()

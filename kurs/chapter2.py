@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 import sympy
+import matplotlib
 import matplotlib.pyplot as plt
 
 import control
@@ -169,6 +170,11 @@ def task4(A, B, C, D):
 
 
 if __name__ == "__main__":
+    font = {
+        'weight': 'bold',
+        'size': 16
+    }
+    matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)
 
     A = get_A()
@@ -177,7 +183,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = True
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = True
     print_taks_4 = True
 

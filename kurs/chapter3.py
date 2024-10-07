@@ -103,7 +103,7 @@ def task1(A, B, C, D):
     x0_list = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.2, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ]
 
@@ -352,6 +352,11 @@ def task5(A, B, C, D):
 
 
 if __name__ == "__main__":
+    font = {
+        'weight': 'bold',
+        'size': 16
+    }
+    matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)
 
     A = get_A()
@@ -359,11 +364,11 @@ if __name__ == "__main__":
     C = get_C()
     D = get_D()
 
-    print_taks_1 = False
+    print_taks_1 = True
     print_taks_2 = True
-    print_taks_3 = False
-    print_taks_4 = False
-    print_taks_5 = False
+    print_taks_3 = True
+    print_taks_4 = True
+    print_taks_5 = True
 
     if print_taks_1:
         task1(A, B, C, D)
