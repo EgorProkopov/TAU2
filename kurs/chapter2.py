@@ -172,7 +172,7 @@ def task4(A, B, C, D):
 if __name__ == "__main__":
     font = {
         'weight': 'bold',
-        'size': 16
+        'size': 20
     }
     matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     D = get_D()
 
     print_taks_1 = True
-    print_taks_2 = True
+    print_taks_2 = False
     print_taks_3 = True
     print_taks_4 = True
 

@@ -29,19 +29,18 @@ def draw_nonlinear_lqr(k, x0, time, q, r, save_path):
     xs = response_nonlin.states
     us = (- k @ xs).reshape(-1)
 
-    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
     for i, state in enumerate(response_nonlin.states):
-        ax[i].plot(time, state, label=f'Q = ${q}I_Q$; R = ${r}I_R$')
-        ax[i].legend()
-        ax[i].set_xlabel('t')
-        ax[i].set_ylabel('$x_i$')
+        ax[i].plot(time, state, label=f'Q = ${q}I_Q$; R = ${r}I_R$', linewidth=8)
+        ax[i].legend(fontsize=24)
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i+1}$", fontsize=24)
         ax[i].grid()
 
-    fig_u, ax_u = plt.subplots(1, figsize=(8, 12))
-    ax_u.plot(time, us, label=f'Q = ${q}I_Q$; R = ${r}I_R$')
-    ax_u.legend()
-    ax_u.set_xlabel('t')
-    ax_u.set_ylabel('$x_i$')
+    fig_u, ax_u = plt.subplots(1, figsize=(16, 24))
+    ax_u.plot(time, us, label=f'Q = ${q}I_Q$; R = ${r}I_R$', linewidth=8)
+    ax_u.legend(fontsize=24)
+    ax_u.set_xlabel('t', fontsize=24)
     ax_u.grid()
 
     fig.savefig(f'{save_path}/task{x0}{q}_{r}_states.png')
@@ -49,8 +48,8 @@ def draw_nonlinear_lqr(k, x0, time, q, r, save_path):
 
 
 def task1(A, B, C, D):
-    x0 = [0.0, 0, 1.3, 0.0]
-    time = set_time(5)
+    x0 = [1.0, 0, 0.0, 0.0]
+    time = set_time(20)
 
     # q = 1.0
     # r = 1.0
@@ -191,12 +190,13 @@ def draw_nonlinear_kalman(C, D, k, l, x0, time, q, r, save_path):
     resp_nonlin_lqe = control.input_output_response(ss_nonlin_lqe, T=time, X0=[1.1, 0.1, 0.1, 0.1], U=C @ resp_nonlin_f.states)
     err = abs(resp_nonlin_lqe.states - resp_nonlin_f.states)
 
-    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
     for i in range(4):
-        ax[i].plot(time, err[i], label=f'$e_{i} = |x_i - \\hat x_i|$')
-        ax[i].set_xlabel('t')
+        ax[i].plot(time, err[i], label=f'$e_{i} = |x_i - \\hat x_i|$', linewidth=8)
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend()
+        ax[i].legend(fontsize=24)
     fig.savefig(f'{save_path}/task_34_{q}_{r}.png')
 
 
@@ -258,23 +258,25 @@ def task4(A, B, C, D):
     ss_lin = control.ss(new_A, new_B, 0 * new_A, 0 * new_B)
     response = control.forced_response(ss_lin, T=time, U=u.T, X0=np.array([1.0, 0, 0.0, 0.0, 1.1, 0.1, 0.1, 0.1]))
 
-    fig, axs = plt.subplots(4, figsize=(8, 12))
-    fig.suptitle("x")
-    fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
-    fig_e.suptitle("error")
+    fig, axs = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle("Состояние", fontsize=48)
+    fig_e, axs_e = plt.subplots(4, figsize=(16, 24))
+    fig_e.suptitle("Ошибка", fontsize=48)
     for i, state in enumerate(response.states[:4]):
-        axs[i].plot(time, state, label=f'$ x_{i} $')
-        axs_e[i].plot(time, response.states[4 + i], label=f'$ e_{i} $')
+        axs[i].plot(time, state, label=f'$ x_{i+1} $', linewidth=8)
+        axs_e[i].plot(time, response.states[4 + i], label=f'$ e_{i+1} $', linewidth=8)
 
     for i in range(4):
-        axs[i].set_xlabel(f"t", fontsize=12)
+        axs[i].set_xlabel(f"t", fontsize=30)
+        axs[i].set_ylabel(f"e_{i+1}", fontsize=30)
         axs[i].grid(True)
-        axs[i].legend()
+        axs[i].legend(fontsize=30)
 
     for i in range(4):
-        axs_e[i].set_xlabel(f"t", fontsize=12)
+        axs_e[i].set_xlabel(f"t", fontsize=30)
+        axs[i].set_ylabel(f"e_{i+1}", fontsize=30)
         axs_e[i].grid(True)
-        axs_e[i].legend()
+        axs_e[i].legend(fontsize=30)
 
     fig.savefig(f'{save_path}/task5_lqg_lin_x.jpg')
     fig_e.savefig(f'{save_path}/task5_lqg_lin_err.jpg')
@@ -329,8 +331,8 @@ def task5(A, B, C, D):
     x0 = [1.0, 0, 0.0, 0.0]
     time = set_time(30)
 
-    q_l = [1.0] * 4
-    r_l = [0.1] * 2
+    q_l = [10.0] * 4
+    r_l = [1.0] * 2
 
     l, new_spec = get_kalman(A, C, q_l, r_l)
     print(f"L: \n{l}")
@@ -357,22 +359,26 @@ def task5(A, B, C, D):
         U=np.zeros((2, len(time)))
     )
 
-    fig, axs = plt.subplots(4, figsize=(8, 12))
-    fig_e, axs_e = plt.subplots(4, figsize=(8, 12))
+    fig, axs = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle("Состояние", fontsize=48)
+    fig_e, axs_e = plt.subplots(4, figsize=(16, 24))
+    fig_e.suptitle("Ошибка", fontsize=48)
 
     for i, state in enumerate(resp_nonlin_LQG.states[:4]):
-        axs[i].plot(time, resp_nonlin_LQG.states[i], label=f'$ x_{i} $')
-        axs_e[i].plot(time, abs(resp_nonlin_LQG.states[i]-resp_nonlin_LQG.states[i + 4]), label=f'$ e_{i} $')
+        axs[i].plot(time, resp_nonlin_LQG.states[i], label=f'$ x_{i+1} $')
+        axs_e[i].plot(time, abs(resp_nonlin_LQG.states[i]-resp_nonlin_LQG.states[i + 4]), label=f'$ e_{i+1} $')
 
     for i in range(4):
-        axs[i].set_xlabel(f"t", fontsize=12)
+        axs[i].set_xlabel(f"t", fontsize=30)
+        axs[i].set_ylabel(f"x_{i + 1}", fontsize=30)
         axs[i].grid(True)
-        axs[i].legend()
+        axs[i].legend(fontsize=30)
 
     for i in range(4):
-        axs_e[i].set_xlabel(f"t, [c]", fontsize=12)
+        axs_e[i].set_xlabel(f"t, [c]", fontsize=30)
+        axs[i].set_ylabel(f"e_{i + 1}", fontsize=30)
         axs_e[i].grid(True)
-        axs_e[i].legend()
+        axs_e[i].legend(fontsize=30)
 
     fig.savefig(f'{save_path}/task5_LQG_nonlin_x{q_k}_{q_l}.jpg')
     fig_e.savefig(f'{save_path}/task5_LQG_nonlin_err{q_k}_{q_l}.jpg')
@@ -381,7 +387,7 @@ def task5(A, B, C, D):
 if __name__ == "__main__":
     font = {
         'weight': 'bold',
-        'size': 12
+        'size': 24
     }
     matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)

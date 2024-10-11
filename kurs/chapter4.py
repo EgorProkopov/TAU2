@@ -51,17 +51,17 @@ def draw_nonlinear_response_lmi(ss_lin, ss_nonlin, x0, time):
     resp_lin = control.initial_response(ss_lin, T=time, X0=x0)
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
-    fig, ax = plt.subplots(4, figsize=(8, 12))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=14)
+    fig, ax = plt.subplots(4, figsize=(16, 24))
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=6)
         ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=6)
 
-        # ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=8)
+        ax[i].legend(fontsize=24)
 
         plt.savefig(f'chapter4_reports/task1/task1_{"_".join([str(x) for x in x0])}.jpg')
 
@@ -71,12 +71,12 @@ def task1(A, B, C, D):
     k, new_spec = get_k_lmi(A, B, alpha)
 
     x0_list = [
-        # [1.0, 0.0, 0.0, 0.0],
-        # [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
-        # [0.0, 0.0, 0.0, 1.0]
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        # [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
     ]
-    time = set_time(1.5)
+    time = set_time(5)
 
     ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
     ss_nonlin.set_inputs(2)
@@ -94,8 +94,9 @@ def task1(A, B, C, D):
 # task 2
 def draw_compare_nonlinear_alphas(A, B, x0, time, alphas, title='new'):
     save_path = r"chapter4_reports/task2"
-    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
     us = []
+
     for alpha in alphas:
         k, new_spec = get_k_lmi(A, B, alpha)
         ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
@@ -103,21 +104,21 @@ def draw_compare_nonlinear_alphas(A, B, x0, time, alphas, title='new'):
         resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
         us.append((k @ resp_nonlin.states).reshape(-1))
         for i in range(4):
-            ax[i].set_title(f"$x_{i + 1}$")
-            ax[i].plot(time, resp_nonlin.states[i], label=f"$\\alpha={alpha}$")
-            ax[i].set_xlabel('t')
+            ax[i].plot(time, resp_nonlin.states[i], label=f"$\\alpha={alpha}$", linewidth=8)
+            ax[i].set_xlabel('t', fontsize=24)
+            ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
             ax[i].grid(True)
-            ax[i].legend()
+            ax[i].legend(fontsize=24)
 
         print(
             f'alpha: ${alpha}$  max x: {round(np.abs(resp_nonlin.states[0]).max(), 2)} max phi:  {round(np.abs(resp_nonlin.states[2]).max(), 2)}  max u: {round(np.abs(k @ resp_nonlin.states).max(), 1)} \\\\')
     plt.savefig(f'{save_path}/task4_2_{title}.png')
     plt.close()
 
-    plt.title(f"$u(t)$, $x_0=${x0}")
+    plt.title(f"$u(t)$, $x_0=${x0}", fontsize=20)
     for i in range(len(alphas)):
-        plt.plot(time, us[i], label=f"$\\alpha={alphas[i]}$")
-    plt.legend()
+        plt.plot(time, us[i], label=f"$\\alpha={alphas[i]}$", linewidth=8)
+    plt.legend(fontsize=16)
     plt.savefig(f'{save_path}/task4_2_u_{title}.png')
 
     plt.close()
@@ -176,7 +177,7 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
 
     k, mu = get_k_lmi_mu(A, B, alpha, x0.reshape((4, 1)))
 
-    fig, ax = plt.subplots(4, figsize=(8, 12))
+    fig, ax = plt.subplots(4, figsize=(16, 24))
     print(f'K = {k}')
     print(f'spec(A + BK) = {np.linalg.eigvals(A + B @ k)}')
     ss_nonlin = control.NonlinearIOSystem(updfcn_lmi, params={"K": k})
@@ -188,22 +189,22 @@ def draw_compare_nonlinear_alpha_mu(A, B, x0, alpha, time):
     resp_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
     fig.suptitle(f"$\\alpha={alpha}$")
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
-        ax[i].plot(time, resp.states[i], label="linear")
-        ax[i].plot(time, resp_nonlin.states[i], '--', label="nonlinear")
+        ax[i].plot(time, resp.states[i], label="linear", linewidth=8)
+        ax[i].plot(time, resp_nonlin.states[i], '--', label="nonlinear", linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid(True)
-        ax[i].legend()
+        ax[i].legend(fontsize=24)
 
     plt.savefig(f'{save_path}/task4_3_{alpha}.png')
     plt.show()
 
     plt.clf()
-    plt.title(f"$u(t)$, $\\alpha={alpha}$")
-    plt.plot(time, (k @ resp.states).reshape(-1), label="linear")
-    plt.plot(time, (k @ resp_nonlin.states).reshape(-1), '--', label="nonlinear")
-    plt.legend()
+    plt.title(f"$u(t)$, $\\alpha={alpha}$", fontsize=20)
+    plt.plot(time, (k @ resp.states).reshape(-1), label="linear", linewidth=8)
+    plt.plot(time, (k @ resp_nonlin.states).reshape(-1), '--', label="nonlinear", linewidth=8)
+    plt.legend(fontsize=16)
     plt.savefig(f'{save_path}/task4_3_u_{alpha}.png')
 
 
@@ -309,7 +310,7 @@ def task5(A, B, C, D):
 if __name__ == "__main__":
     font = {
         'weight': 'bold',
-        'size': 16
+        'size': 24
     }
     matplotlib.rc('font', **font)
 
@@ -322,9 +323,9 @@ if __name__ == "__main__":
 
     print_taks_1 = False
     print_taks_2 = False
-    print_taks_3 = False
+    print_taks_3 = True
     print_taks_4 = False
-    print_taks_5 = True
+    print_taks_5 = False
 
     if print_taks_1:
         task1(A, B, C, D)

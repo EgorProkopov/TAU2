@@ -55,15 +55,15 @@ def draw_nonlin_response(ss_nonlin, x0, time, title="new"):
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4, figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
         plt.savefig(f'chapter3_reports/task2/task2_{title}.jpg')
 
@@ -73,16 +73,16 @@ def draw_and_compare_nonlinear_response_modal(ss_lin, ss_nonlin, x0, time):
     response_nonlin = control.input_output_response(ss_nonlin, T=time, X0=x0, U=np.zeros((2, len(time))))
 
     fig, ax = plt.subplots(4,  figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, resp_lin.states[i], label='linear', linewidth=8)
         ax[i].plot(time, response_nonlin.states[i], '--', label='nonlinear', linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
         plt.savefig(f'chapter3_reports/task1/task1_{"_".join([str(x) for x in x0])}.jpg')
 
@@ -103,7 +103,7 @@ def task1(A, B, C, D):
     x0_list = [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
-        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.2, 0.0],
         [0.0, 0.0, 0.0, 1.0]
     ]
 
@@ -195,17 +195,17 @@ def draw_and_nonlinear_response_modal_observer(ss_nonlin, ss_nonlin_observer, x0
     error = response_nonlin_observer.states - response_nonlin.states
 
     fig, ax = plt.subplots(4,  figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, response_nonlin.states[i], label='nonlinear', linewidth=8)
         ax[i].plot(time, response_nonlin_observer.states[i], '--', label='observer', linewidth=8)
         ax[i].plot(time, error[i], color='r', label='error', linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
         plt.savefig(f'{save_path}/task1_{"_".join([str(x) for x in x0])}.jpg')
 
@@ -324,6 +324,13 @@ def task5(A, B, C, D):
     y = np.ones((A.shape[0], C.shape[0]))
     lambdas_k = [-1.0, -2.0, -3.0, -4.0]
     lambdas_l = [-1.1, -1.2, -1.3, -1.4]
+
+    # lambdas_k = [-1.0, -2.0, -3.0, -4.0]
+    # lambdas_l = [-1.0, -2.0, -3.0, -4.0]
+
+    # lambdas_k = [-1.1, -1.2, -1.3, -1.4]
+    # lambdas_l = [-1.0, -2.0, -3.0, -4.0]
+
     gamma_k = set_gamma(lambdas_k)
     gamma_l = set_gamma(lambdas_l)
     l, new_spec = get_l_modal(A, C, gamma_l, y)
@@ -344,15 +351,15 @@ def task5(A, B, C, D):
     response_nonlin_out = control.input_output_response(ss_nonlin_out, T=time, X0=np.hstack((x0, x0 + 0.1)), U=C @ response_nonlin_observer.states)
 
     fig, ax = plt.subplots(4, figsize=(16, 24))
-    fig.suptitle(f"$x_0$: {x0}", fontsize=18)
+    fig.suptitle(f"$x_0$: {x0}", fontsize=24)
 
     for i in range(4):
-        ax[i].set_title(f"$x_{i + 1}$")
         ax[i].plot(time, response_nonlin_out.states[i], label='out', linewidth=8)
 
-        ax[i].set_xlabel('t')
+        ax[i].set_xlabel('t', fontsize=24)
+        ax[i].set_ylabel(f"$x_{i + 1}$", fontsize=24)
         ax[i].grid()
-        ax[i].legend(fontsize=12)
+        ax[i].legend(fontsize=24)
 
         plt.savefig(f'chapter3_reports/task5/task1_{lambdas_k}{lambdas_l}.jpg')
 
@@ -360,7 +367,7 @@ def task5(A, B, C, D):
 if __name__ == "__main__":
     font = {
         'weight': 'bold',
-        'size': 16
+        'size': 24
     }
     matplotlib.rc('font', **font)
     np.set_printoptions(precision=2)
